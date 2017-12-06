@@ -7,20 +7,24 @@ class Pokemon(object):
 			lines = datafile.read().split("\n")
 			self.type1 = int(lines[0])
 			self.type2 = int(lines[1])
-			self.height = float(lines[2])
-			self.weight = float(lines[3])
-			self.maxHP = int(lines[4])
-			self.attack = int(lines[5])
-			self.defense = int(lines[6])
-			self.specialAttack = int(lines[7])
-			self.specialDefense = int(lines[8])
-			self.speed = int(lines[9])
-			self.availableAbilities = (lines[10], lines[11])
+			if int(lines[2]):
+				self.gender = 'n'
+			else:
+				self.gender = 'm'
+			self.height = float(lines[3])
+			self.weight = float(lines[4])
+			self.maxHP = int(lines[5])
+			self.attack = int(lines[6])
+			self.defense = int(lines[7])
+			self.specialAttack = int(lines[8])
+			self.specialDefense = int(lines[9])
+			self.speed = int(lines[10])
+			self.availableAbilities = (lines[11], lines[12])
 			self.ability = None
 			self.availableMoves = list()
 			self.moves = [None, None, None, None]
 
-			for line in lines[12:]:
+			for line in lines[13:]:
 				line = line.split(" ")
 				requiredLevel = int(line.pop())
 				self.availableMoves.append((" ".join(line), requiredLevel))

@@ -3,6 +3,7 @@
 from os import listdir
 from poketypes import Types
 from pokemon import Pokemon
+from nature import Natures, printNatures
 
 available = set(listdir("../data/pokemon"))
 
@@ -25,4 +26,26 @@ while userPokemon.gender != 'n':
 	choice = input('(m/f): ')
 	if choice in {'m', 'f'}:
 		userPokemon.gender = choice
+		break
+	print("This ain't tumblr")
+
+print()
+
+while not userPokemon.level:
+	print("Choose your pokemon's level")
+	choice = input("[1-100]: ")
+	try:
+		if int(choice) in range(1,101):
+			userPokemon.level = int(choice)
+			break
+	except Exception as e:
+		print("Please enter a number.")
+
+while not userPokemon.nature:
+	print("Choose your pokemon's nature")
+	choice = input("(Nature, or 'l' to list natures): ")
+	if choice == 'l':
+		printNatures()
+	elif choice in Natures:
+		userPokemon.nature = choice
 		break
