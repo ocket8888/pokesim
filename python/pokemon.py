@@ -3,6 +3,8 @@ from poketypes import Types, names as typeNames
 from move import Move
 from utils import cls
 
+suffixes = {0:"st", 1:"nd", 2:"rd", 3:"th"}
+
 class Pokemon(object):
 	"""A class representing a pokemon, and all the information that entails"""
 	def __init__(self, name):
@@ -88,7 +90,7 @@ class Pokemon(object):
 			if move and index != moveNo:
 				available.remove(move.name)
 		while True:
-			print("Select", self.name + "'s", "move, or type 'l' to list available moves.")
+			print("Select", self.name + "'s", str(moveNo+1)+suffixes[moveNo], "move, or type 'l' to list available moves.")
 			choice = input(":")
 			if choice == 'l':
 				cls()
@@ -99,13 +101,20 @@ class Pokemon(object):
 			elif choice in available:
 				self.moves[moveNo] = Move(choice)
 				break
-			elif choice in (x.name for x in self.moves):
+			elif choice and choice in (x.name for x in self.moves):
 				cls()
 				print(self.name, "already knows", choice+"!")
 				print()
 			cls()
 			print("Unrecognized move:", choice)
 			print()
+
+	def useMove(self, mymove, otherpoke, othermove):
+		if mymove.moveType:
+			dmg = mymove.calcDmg(self, otherpoke, othermove)
+			otherpoke.HP -= dmg
+			if otherpoke.HP < 0:
+				otherpoke.HP = 0
 
 	def __repr__(self):
 		'''A string representation of a Pokemon'''

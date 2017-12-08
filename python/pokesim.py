@@ -2,12 +2,8 @@
 
 from os import listdir
 from pokemon import Pokemon, setup
-from utils import cls
+from utils import cls, decideOrder
 from random import seed, randrange
-
-print("\033[38;2;255;87;34mWarning! This simulation uses color codes!\033[38;2;255;255;255m")
-exit()
-_ = input()
 
 available = set(listdir("../data/pokemon"))
 cls()
@@ -51,12 +47,14 @@ cls()
 print("Battle Starting!")
 print()
 userLines = repr(userPokemon).split('\n')
-opponentLines = repr(userPokemon).split('\n')
+opponentLines = repr(opponentPokemon).split('\n')
 print("\t\t".join((userLines.pop(0), "versus", opponentLines.pop(0))))
 print("\n".join(("\t\t\t\t".join((userLines[i], opponentLines[i])) for i in range(len(userLines)))))
 print()
 seed()
 _ = input("Press Enter to continue.")
+
+playerWon = False
 
 #Battle Begin
 while True:
@@ -73,15 +71,51 @@ while True:
 			print("Please enter a number.")
 			print()
 			continue
-		if choice in range(4):
+		if choice in range(1,5):
+			choice = userPokemon.moves[choice - 1]
 			break
 		cls()
-		print("Please enter a number from 0 to 3.")
+		print("Please enter a number from 1 to 4.")
 		print()
 			
 	#Computer chooses a move
 	cls()
-	opponentChoice = randomrange(4)
+	opponentChoice = opponentPokemon.moves[randrange(4)]
 
-	order = 5
-		
+	order = decideOrder(userPokemon, choice, opponentPokemon, opponentChoice)
+
+	if order:
+		opponentPokemon.useMove(opponentChoice, userPokemon, choice)
+		if not userPokemon.HP:
+			break
+		elif not opponentPokemon.HP:
+			playerWon = True
+			break
+
+		userPokemon.useMove(choice, opponentPokemon, opponentChoice)
+		if not opponentPokemon.HP:
+			playerWon = True
+			break
+		elif not userPokemon.HP:
+			break
+
+	else:
+		userPokemon.useMove(choice, opponentPokemon, opponentChoice)
+		if not opponentPokemon.HP:
+			playerWon = True
+			break
+		elif not userPokemon.HP:
+			break
+			
+		opponentPokemon.useMove(opponentChoice, userPokemon, choice)
+		if not userPokemon.HP:
+			break
+		elif not opponentPokemon.HP:
+			playerWon = True
+			break
+
+cls()
+if playerWon:
+	print("You Win!")
+else:
+	print("You lose...")

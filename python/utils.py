@@ -1,10 +1,13 @@
 from os import name, system
 from status import Status
-from random import choice
+from random import randrange
 
 def cls():
 	'''Clears the terminal screen. It's really slow, but there's no other way afaik'''
 	system("cls" if name == 'nt' else "clear")
+
+def colorPrint(text, color):
+	print("\033[38;2;"+';'.join(color)+'m'+text+"\033[38;2;255;255;255m")
 
 def decideOrder(poke0, move0, poke1, move1):
 	'''Given two pokemon and their chosen moves, determines which one should go first'''
@@ -17,20 +20,27 @@ def decideOrder(poke0, move0, poke1, move1):
 	effsp0, effsp1 = poke0.speed, poke1.speed
 
 	if poke0.stages[4] > 0:
-		effsp0 *= (3 + poke0.stages[4])/3.0
+		effsp0 *= (2 + poke0.stages[4])/2.0
 	elif poke0.stages[4] < 0:
-		effsp0 *= 3.0/(3.0 - poke0.stages[4])
+		effsp0 *= 2.0/(2.0 - poke0.stages[4])
 
 	if poke0.status == Status.PAR:
 		effsp0 /= 2.0
 
 	if poke1.stages[4] > 0:
-		effsp1 *= (3 + poke1.stages[4])/3.0
+		effsp1 *= (2 + poke1.stages[4])/2.0
 	elif poke1.stages[4] < 0:
-		effsp1 *= 3.0/(3.0 - poke1.stages[4])
+		effsp1 *= 2.0/(2.0 - poke1.stages[4])
 
 	if poke1.status == Status.PAR:
 		effsp1 /= 2.0
 
-	#Use effective speed to calculate 
+	#Use effective speed to calculate order
+	if effsp0 > effsp1:
+		return 0
+	elif effsp1 > effsp0:
+		return 1
+
+	#use random number to break tie
+	return randrange(1)
 
