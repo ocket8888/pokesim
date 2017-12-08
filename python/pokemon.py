@@ -91,43 +91,49 @@ class Pokemon(object):
 			print("Select", self.name + "'s", "move, or type 'l' to list available moves.")
 			choice = input(":")
 			if choice == 'l':
-			 	for move in available:
-			 		print(move)
-		 		print()
-		 		continue
+				cls()
+				for move in available:
+					print(move)
+				print()
+				continue
 			elif choice in available:
 				self.moves[moveNo] = Move(choice)
 				break
+			elif choice in (x.name for x in self.moves):
+				cls()
+				print(self.name, "already knows", choice+"!")
+				print()
 			cls()
 			print("Unrecognized move:", choice)
+			print()
 
 	def __repr__(self):
 		'''A string representation of a Pokemon'''
-		printstr = 'Lv.' + str(self.level) + ' ' + self.name +'\n'
-		printstr += "Type: " + typeNames[self.type1] + ("/" + typeNames[self.type2] + '\n' if self.type2 != Types.TYPELESS else '\n')
-		printstr += "Height: " + str(self.height) +"m\n"
-		printstr += "Weight: " + str(self.weight) +"kg\n"
+		printstr = 'Lv.' + str(self.level) + ' ' + self.name +'        \n'
+		printstr += "Type: " + typeNames[self.type1] + ("/" + typeNames[self.type2] + '        \n' if self.type2 != Types.TYPELESS else '        \n')
+		printstr += "Height: " + str(self.height) +"m              \n"
+		printstr += "Weight: " + str(self.weight) +"kg             \n"
 		printstr += "Gender: "
 		if self.gender == 'm':
-			printstr += 'Male\n'
+			printstr += 'Male              \n'
 		elif self.gender == 'f':
-			printstr += 'Female\n'
+			printstr += 'Female            \n'
 		elif self.gender == 'n':
-			printstr += 'Genderless\n'
+			printstr += 'Genderless        \n'
 		else:
-			printstr += 'unset\n'
-		printstr += "Nature: " + str(self.nature) + '\n'
+			printstr += 'unset             \n'
+		printstr += "Nature: " + str(self.nature) + '              \n'
 		printstr += "MaxHP/CurrentHP: " + str(self.maxHP) + '/' + str(self.HP) + '\n'
-		printstr += "Attack: " + str(self.attack) + '\n'
-		printstr += "Defense: " + str(self.defense) + '\n'
-		printstr += "Special Attack: " + str(self.specialAttack) + '\n'
-		printstr += "Special Defense: " + str(self.specialDefense) + '\n'
-		printstr += "Speed: " + str(self.speed) + '\n'
-		printstr += "        Moves\n"
-		printstr += "=====================\n"
+		printstr += "Attack: " + str(self.attack) + '              \n'
+		printstr += "Defense: " + str(self.defense) + '            \n'
+		printstr += "Special Attack: " + str(self.specialAttack) + '        \n'
+		printstr += "Special Defense: " + str(self.specialDefense) + '        \n'
+		printstr += "Speed: " + str(self.speed) + '                \n'
+		printstr += "        Moves                \n"
+		printstr += "=====================        \n"
 		for move in self.moves:
 			if move:
-				printstr += '\t' + str(move) + '\n'
+				printstr += '\t' + str(move) + '             \n'
 
 
 		return printstr
@@ -235,7 +241,7 @@ def setNature(pokemon):
 		print("Choose", pokemon.name+"'s nature")
 		choice = input("(Nature, or 'l' to list natures): ")
 		if choice == 'l':
-			print()
+			cls()
 			printNatures()
 			print()
 			continue
