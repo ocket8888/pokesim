@@ -3,7 +3,11 @@
 from os import listdir
 from pokemon import Pokemon, setup
 from utils import cls
-from random import seed, randomrange
+from random import seed, randrange
+
+print("\033[38;2;255;87;34mWarning! This simulation uses color codes!\033[38;2;255;255;255m")
+exit()
+_ = input()
 
 available = set(listdir("../data/pokemon"))
 cls()
@@ -61,7 +65,7 @@ while True:
 	#Player chooses a move
 	while True:
 		for index, move in enumerate(userPokemon.moves):
-			print('['+str(index+1)']:', str(move))
+			print('['+str(index+1)+']:', str(move))
 		try:
 			choice = int(input("Choose a move: "))
 		except:
@@ -79,5 +83,5 @@ while True:
 	cls()
 	opponentChoice = randomrange(4)
 
-	order = 
+	order = 5
 		
