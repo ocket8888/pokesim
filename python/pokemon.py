@@ -1,6 +1,6 @@
 from nature import statMult, Natures, printNatures
 from poketypes import Types, names as typeNames
-from move import Move
+from move import Move, MoveTypes
 from utils import cls
 
 suffixes = {0:"st", 1:"nd", 2:"rd", 3:"th"}
@@ -110,11 +110,12 @@ class Pokemon(object):
 			print()
 
 	def useMove(self, mymove, otherpoke, othermove):
-		if mymove.moveType:
+		if mymove.moveType != MoveTypes.STATUS:
 			dmg = mymove.calcDmg(self, otherpoke, othermove)
 			otherpoke.HP -= dmg
 			if otherpoke.HP < 0:
 				otherpoke.HP = 0
+			print(self.name, "dealt", dmg, "damage!")
 
 	def __repr__(self):
 		'''A string representation of a Pokemon'''
@@ -167,12 +168,12 @@ def setEVs(pokemon):
 	while total:
 		print("Choose a stat to put Effort Values into (You have", total, "remaining EVs to spend)")
 		print()
-		print("[0]: HP\t-\t", pokemon.EVs[0])
-		print("[1]: Attack\t-\t", pokemon.EVs[1])
-		print("[2]: Defense\t-\t", pokemon.EVs[2])
-		print("[3]: Special Defense\t-\t", pokemon.EVs[3])
-		print("[4]: Special Attack\t-\t", pokemon.EVs[4])
-		print("[5]: Speed\t-\t", pokemon.EVs[5])
+		print("[0]: HP              -\t", pokemon.EVs[0])
+		print("[1]: Attack          -\t", pokemon.EVs[1])
+		print("[2]: Defense         -\t", pokemon.EVs[2])
+		print("[3]: Special Attack  -\t", pokemon.EVs[3])
+		print("[4]: Special Defense -\t", pokemon.EVs[4])
+		print("[5]: Speed           -\t", pokemon.EVs[5])
 		print()
 		stat = input(":")
 		try:

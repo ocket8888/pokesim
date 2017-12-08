@@ -44,3 +44,12 @@ def decideOrder(poke0, move0, poke1, move1):
 	#use random number to break tie
 	return randrange(1)
 
+def gracefulExit():
+	cls()
+	import sys.exit
+	from os import _exit
+	print('Shutting down')
+	try:
+		sys.exit(0)
+	except SystemExit:
+		_exit(0)

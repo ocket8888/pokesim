@@ -2,6 +2,7 @@ from poketypes import Types, names as typeNames
 from enum import IntFlag, unique
 from status import Status
 from random import uniform
+from math import floor
 
 @unique
 class MoveTypes(IntFlag):
@@ -69,8 +70,9 @@ class Move():
 			elif otherpkmn.stages[3] < 0:
 				effdef *= 2.0 / (2.0 - otherpkmn.stages[3])
 
-		dmg *= int(effat/effdef)
-		dmg = int(dmg / 50)
+
+		dmg *= effat/effdef
+		dmg /= 50
 		dmg += 2
 
 		#Caclucate modifier

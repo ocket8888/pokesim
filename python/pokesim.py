@@ -2,7 +2,7 @@
 
 from os import listdir
 from pokemon import Pokemon, setup
-from utils import cls, decideOrder
+from utils import cls, decideOrder, gracefulExit
 from random import seed, randrange
 
 available = set(listdir("../data/pokemon"))
@@ -52,12 +52,12 @@ print("\t\t".join((userLines.pop(0), "versus", opponentLines.pop(0))))
 print("\n".join(("\t\t\t\t".join((userLines[i], opponentLines[i])) for i in range(len(userLines)))))
 print()
 seed()
-_ = input("Press Enter to continue.")
 
 playerWon = False
 
 #Battle Begin
 while True:
+	_ = input("Press Enter to continue.")
 	cls()
 
 	#Player chooses a move
@@ -66,7 +66,9 @@ while True:
 			print('['+str(index+1)+']:', str(move))
 		try:
 			choice = int(input("Choose a move: "))
-		except:
+		except Exception as e:
+			if type(e) is KeyboardInterrupt:
+				gracefulExit()
 			cls()
 			print("Please enter a number.")
 			print()
