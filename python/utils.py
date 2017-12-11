@@ -3,6 +3,7 @@ from status import Status
 from random import randrange
 
 def cls():
+	return
 	'''Clears the terminal screen. It's really slow, but there's no other way afaik'''
 	system("cls" if name == 'nt' else "clear")
 

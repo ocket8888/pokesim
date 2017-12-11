@@ -35,8 +35,11 @@ class Move():
 
 	def calcDmg(self, pkmn, otherpkmn, othermove):
 		'''Calculates damage done by pkmn to otherpkmn (who used 'othermove', if that matters)'''
-		dmg = 2 * pkmn.level // 5
+		dmg = 2 * pkmn.level / 5.0
 		dmg += 2
+		dmg *= self.power
+
+		effat, effdef = 0.0, 0.0
 
 		#Physical attack
 		if self.moveType == MoveTypes.PHYSICAL:
@@ -70,7 +73,6 @@ class Move():
 			elif otherpkmn.stages[3] < 0:
 				effdef *= 2.0 / (2.0 - otherpkmn.stages[3])
 
-
 		dmg *= effat/effdef
 		dmg /= 50
 		dmg += 2
@@ -87,6 +89,8 @@ class Move():
 
 		if pkmn.status == Status.BRN and self.moveType == MoveTypes.PHYSICAL:
 			mod /= 2.0
+
+		dmg *= mod
 
 		return int(dmg * mod)
 
