@@ -2,6 +2,8 @@ from nature import statMult, Natures, printNatures
 from poketypes import Types, names as typeNames
 from move import Move, MoveTypes
 from utils import cls
+from random import randrange
+from stats import *
 
 suffixes = {0:"st", 1:"nd", 2:"rd", 3:"th"}
 
@@ -43,7 +45,7 @@ class Pokemon(object):
 		self.status = 0
 		self.priority = 0
 		self.HP = self.maxHP
-		self.stages = [0,0,0,0,0,0,0,0]
+		self.stages = {ATTACK: 0, DEFENSE: 0, SPECIAL_ATTACK: 0, SPECIAL_DEFENSE: 0, SPEED: 0, CRIT: 0, ACCURACY: 0, EVASIVENESS: 0}
 		self.EVs = [0,0,0,0,0,0]
 		self.level = 0
 		self.nature = None
@@ -101,7 +103,7 @@ class Pokemon(object):
 			elif choice in available:
 				self.moves[moveNo] = Move(choice)
 				break
-			elif choice and choice in (x.name for x in self.moves):
+			elif choice and choice in (x.name for x in self.moves if x):
 				cls()
 				print(self.name, "already knows", choice+"!")
 				print()
@@ -110,6 +112,24 @@ class Pokemon(object):
 			print()
 
 	def useMove(self, mymove, otherpoke, othermove):
+		'''Handles what happens when a pokemon uses a move on another pokemon.'''
+		hitChance = randrange(101)
+		effacc = 100.0
+		if self.stages[ACCURACY] > 0:
+			effacc *= ( 3 + self.stages[ACCURACY] ) / 3.0
+		elif self.stages[ACCURACY] < 0:
+			effacc *= 3.0 / ( 3 + self.stages[ACCURACY] )
+
+		effev = 100.0
+		if otherpoke.stages[EVASIVENESS] > 0:
+			effev *= ( 3 + otherpoke.stages[EVASIVENESS] ) / 3.0
+		elif otherpoke.stages[EVASIVENESS] < 0:
+			effev *= 3.0 / ( 3 + otherpoke.stages[EVASIVENESS] )
+
+		if hitChance > int(mymove.accuracy * effacc / effev ):
+			print("... but it missed!")
+			return
+
 		if mymove.moveType != MoveTypes.STATUS:
 			dmg = mymove.calcDmg(self, otherpoke, othermove)
 			otherpoke.HP -= dmg
@@ -147,20 +167,6 @@ class Pokemon(object):
 
 
 		return printstr
-
-from enum import IntFlag, unique
-
-@unique
-class Stages(IntFlag):
-	"""Holds the indices for stats in the stages array of a Pokemon"""
-	ATTACK	=	0
-	DEFENSE	=	1
-	SPECIAL_ATTACK	=	2
-	SPECIAL_DEFENSE	=	3
-	SPEED	=	4
-	CRIT	=	5
-	ACCURACY	=	6
-	EVASIVENESS	=	7
 
 def setEVs(pokemon):
 	'''An interactive procedure to set the EVs of a given pokemon'''

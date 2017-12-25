@@ -3,6 +3,7 @@ from enum import IntFlag, unique
 from status import Status
 from random import uniform
 from math import floor
+from stats import *
 
 @unique
 class MoveTypes(IntFlag):
@@ -45,17 +46,17 @@ class Move():
 		if self.moveType == MoveTypes.PHYSICAL:
 			effat = pkmn.attack
 
-			if pkmn.stages[0] > 0:
-				effat *= (2.0 + pkmn.stages[0]) / 2.0
-			if pkmn.stages[0] < 0:
-				effat *= 2.0 / (2.0 - pkmn.stages[0])
+			if pkmn.stages[ATTACK] > 0:
+				effat *= (2.0 + pkmn.stages[ATTACK]) / 2.0
+			if pkmn.stages[ATTACK] < 0:
+				effat *= 2.0 / (2.0 - pkmn.stages[ATTACK])
 
 			effdef = otherpkmn.defense
 
-			if otherpkmn.stages[1] > 0:
-				effdef *= (2.0 + otherpkmn.stages[1]) / 2.0
-			elif otherpkmn.stages[1] < 0:
-				effdef *= 2.0 / (2.0 - otherpkmn.stages[1])
+			if otherpkmn.stages[DEFENSE] > 0:
+				effdef *= (2.0 + otherpkmn.stages[DEFENSE]) / 2.0
+			elif otherpkmn.stages[DEFENSE] < 0:
+				effdef *= 2.0 / (2.0 - otherpkmn.stages[DEFENSE])
 
 		#Special attack
 		elif self.moveType == MoveTypes.SPECIAL:

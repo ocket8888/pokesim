@@ -87,6 +87,7 @@ while True:
 	order = decideOrder(userPokemon, choice, opponentPokemon, opponentChoice)
 
 	if order:
+		print("The opponent's", opponentPokemon.name, "used",opponentChoice.name+"!")
 		opponentPokemon.useMove(opponentChoice, userPokemon, choice)
 		if not userPokemon.HP:
 			break
@@ -94,6 +95,7 @@ while True:
 			playerWon = True
 			break
 
+		print(userPokemon.name, "used", choice.name+"!")
 		userPokemon.useMove(choice, opponentPokemon, opponentChoice)
 		if not opponentPokemon.HP:
 			playerWon = True
@@ -102,13 +104,15 @@ while True:
 			break
 
 	else:
+		print(userPokemon.name, "used", choice.name+"!")
 		userPokemon.useMove(choice, opponentPokemon, opponentChoice)
 		if not opponentPokemon.HP:
 			playerWon = True
 			break
 		elif not userPokemon.HP:
 			break
-			
+		
+		print("The opponent's", opponentPokemon.name, "used",opponentChoice.name+"!")
 		opponentPokemon.useMove(opponentChoice, userPokemon, choice)
 		if not userPokemon.HP:
 			break
@@ -116,8 +120,7 @@ while True:
 			playerWon = True
 			break
 
-cls()
 if playerWon:
-	print("You Win!")
+	print("The opponent's {opponentPokemon.name} fainted.\nYou Win!")
 else:
-	print("You lose...")
+	print("{userPokemon.name} fainted.\nYou lose...")

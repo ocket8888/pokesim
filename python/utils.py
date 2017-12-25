@@ -3,9 +3,8 @@ from status import Status
 from random import randrange
 
 def cls():
-	return
 	'''Clears the terminal screen. It's really slow, but there's no other way afaik'''
-	system("cls" if name == 'nt' else "clear")
+	print("\033[H\033[J")
 
 def colorPrint(text, color):
 	print("\033[38;2;"+';'.join(color)+'m'+text+"\033[38;2;255;255;255m")
