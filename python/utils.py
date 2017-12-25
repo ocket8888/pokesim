@@ -1,4 +1,3 @@
-from os import name, system
 from status import Status
 from random import randrange
 
@@ -10,7 +9,7 @@ def cls():
 	print("\033[H\033[J")
 
 def colorPrint(text, color):
-	print("\033[38;2;"+';'.join(color)+'m'+text+"\033[38;2;255;255;255m")
+	print("\033[38;2;"+';'.join([str(byte) for byte in color])+'m'+text+"\033[38;2;255;255;255m")
 
 def decideOrder(poke0, move0, poke1, move1):
 	"""

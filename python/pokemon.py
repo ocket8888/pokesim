@@ -1,9 +1,8 @@
 from nature import statMult, Natures, printNatures
-from poketypes import Types, names as typeNames
-from move import Move, MoveTypes
+from move import Move
 from utils import cls
 from random import randrange
-from stats import *
+from constants import *
 
 suffixes = {0:"st", 1:"nd", 2:"rd", 3:"th"}
 
@@ -138,15 +137,22 @@ class Pokemon(object):
 			effev *= 3.0 / ( 3 + otherpoke.stages[EVASIVENESS] )
 
 		if hitChance > int(mymove.accuracy * effacc / effev ):
-			print("... but it missed!")
+			print(f"... but it {'missed' if mymove.moveType else 'failed'}!")
 			return
 
-		if mymove.moveType != MoveTypes.STATUS:
+		if mymove.moveType != STATUS:
 			dmg = mymove.calcDmg(self, otherpoke, othermove)
 			otherpoke.HP -= dmg
 			if otherpoke.HP < 0:
 				otherpoke.HP = 0
 			print(f"It dealt {dmg} damage!")
+
+		else:
+			targetPoke = self if mymove.target else otherpoke
+			currentStage = targetPoke[mymove.affectedStat]
+
+			if currentStage + mymove.stageChange not in range(-6,7):
+				print(f"{target.name}'s ")
 
 	def __repr__(self):
 		"""

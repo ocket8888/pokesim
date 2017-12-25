@@ -1,22 +1,6 @@
-from poketypes import Types, names as typeNames
-from enum import IntFlag, unique
-from status import Status
 from random import uniform
 from math import floor
-from stats import *
-
-@unique
-class MoveTypes(IntFlag):
-	"""
-	Enumerated move tyes
-	"""
-	STATUS   =	0
-	SPECIAL  =	1
-	PHYSICAL =	2
-
-moveTypeNames = {MoveTypes.STATUS:	"Status",
-                 MoveTypes.SPECIAL:	"Special",
-                 MoveTypes.PHYSICAL:	"Physical"}
+from constants import *
 
 class Move():
 	"""
@@ -74,7 +58,7 @@ class Move():
 		effat, effdef = 0.0, 0.0
 
 		#Physical attack
-		if self.moveType == MoveTypes.PHYSICAL:
+		if self.moveType == PHYSICAL:
 			effat = pkmn.attack
 
 			if pkmn.stages[ATTACK] > 0:
@@ -90,7 +74,7 @@ class Move():
 				effdef *= 2.0 / (2.0 - otherpkmn.stages[DEFENSE])
 
 		#Special attack
-		elif self.moveType == MoveTypes.SPECIAL:
+		elif self.moveType == SPECIAL:
 			effat = pkmn.specialAttack
 
 			if pkmn.stages[2] > 0:
@@ -111,15 +95,15 @@ class Move():
 
 		#Caclucate modifier
 		mod = uniform(0.85, 1)
-		if self.type1 != Types.TYPELESS:
+		if self.type1 != TYPELESS:
 			if pkmn.type1 == self.type1 or pkmn.type2 == self.type2:
 				mod *= 1.5
 
-		if self.type2 != Types.TYPELESS:
+		if self.type2 != TYPELESS:
 			if pkmn.type1 == self.type2 or pkmn.type2 == self.type2:
 				mod *= 1.5
 
-		if pkmn.status == Status.BRN and self.moveType == MoveTypes.PHYSICAL:
+		if pkmn.status == BRN and self.moveType == PHYSICAL:
 			mod /= 2.0
 
 		dmg *= mod
@@ -128,7 +112,7 @@ class Move():
 
 	def __repr__(self):
 		printstr = f"{self.name}\n"
-		printstr += f"Type: {typeNames[self.type1]}{('/'+typeNames[self.type2] if self.type2 != Types.TYPELESS else '')}"
+		printstr += f"Type: {typeNames[self.type1]}{('/'+typeNames[self.type2] if self.type2 != TYPELESS else '')}"
 		printstr += f"{moveTypeNames[self.moveType]}\n"
 		printstr += f"Accuracy: {self.accuracy}\n"
 		if self.moveType:
