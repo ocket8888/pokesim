@@ -119,13 +119,13 @@ class Move():
 		return int(dmg * mod)
 
 	def __repr__(self):
-		printstr = self.name + '\n'
-		printstr += 'Type: '+typeNames[self.type1]+('/'+typeNames[self.type2]+'\n' if self.type2 != Types.TYPELESS else '\n')
-		printstr += moveTypeNames[self.moveType] + '\n'
-		printstr += 'Accuracy: ' + str(self.accuracy) + '\n'
+		printstr = f"{self.name}\n"
+		printstr += f"Type: {typeNames[self.type1]}{('/'+typeNames[self.type2] if self.type2 != Types.TYPELESS else '')}"
+		printstr += f"{moveTypeNames[self.moveType]}\n"
+		printstr += f"Accuracy: {self.accuracy}\n"
 		if self.moveType:
-			printstr += 'Power: ' + str(self.power) + '\n'
-			printstr += "Does " + ("not " if not self.contact else "") + "make contact\n"
+			printstr += f"Power: {self.power}\n"
+			printstr += f"Does {('not' if not self.contact else '')} make contact\n"
 
 	def __str__(self):
 		return self.name

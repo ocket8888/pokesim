@@ -19,7 +19,7 @@ while True:
 	elif choice in available:
 		break
 	cls()
-	print(choice, "is not a recognized Pokemon!")
+	print(f"{choice} is not a recognized Pokemon!")
 
 cls()
 userPokemon = Pokemon(choice)
@@ -63,7 +63,7 @@ while True:
 	#Player chooses a move
 	while True:
 		for index, move in enumerate(userPokemon.moves):
-			print('['+str(index+1)+']:', str(move))
+			print(f"[{index+1}]: {move}")
 		try:
 			choice = int(input("Choose a move: "))
 		except Exception as e:
@@ -87,7 +87,7 @@ while True:
 	order = decideOrder(userPokemon, choice, opponentPokemon, opponentChoice)
 
 	if order:
-		print("The opponent's", opponentPokemon.name, "used",opponentChoice.name+"!")
+		print(f"The opponent's {opponentPokemon.name} used {opponentChoice.name}!")
 		opponentPokemon.useMove(opponentChoice, userPokemon, choice)
 		if not userPokemon.HP:
 			break
@@ -95,7 +95,7 @@ while True:
 			playerWon = True
 			break
 
-		print(userPokemon.name, "used", choice.name+"!")
+		print(f"{userPokemon.name} used {choice.name}!")
 		userPokemon.useMove(choice, opponentPokemon, opponentChoice)
 		if not opponentPokemon.HP:
 			playerWon = True
@@ -104,7 +104,7 @@ while True:
 			break
 
 	else:
-		print(userPokemon.name, "used", choice.name+"!")
+		print(f"{userPokemon.name} used {choice.name}!")
 		userPokemon.useMove(choice, opponentPokemon, opponentChoice)
 		if not opponentPokemon.HP:
 			playerWon = True
@@ -112,7 +112,7 @@ while True:
 		elif not userPokemon.HP:
 			break
 		
-		print("The opponent's", opponentPokemon.name, "used",opponentChoice.name+"!")
+		print(f"The opponent's {opponentPokemon.name} used {opponentChoice.name}!")
 		opponentPokemon.useMove(opponentChoice, userPokemon, choice)
 		if not userPokemon.HP:
 			break

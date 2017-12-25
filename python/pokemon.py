@@ -92,7 +92,7 @@ class Pokemon(object):
 			if move and index != moveNo:
 				available.remove(move.name)
 		while True:
-			print("Select", self.name + "'s", str(moveNo+1)+suffixes[moveNo], "move, or type 'l' to list available moves.")
+			print(f"Select {self.name}'s {moveNo+1}{suffixes[moveNo]} move.\n(move, or type 'l' to list available moves)")
 			choice = input(":")
 			if choice == 'l':
 				cls()
@@ -105,10 +105,10 @@ class Pokemon(object):
 				break
 			elif choice and choice in (x.name for x in self.moves if x):
 				cls()
-				print(self.name, "already knows", choice+"!")
+				print(f"{self.name} already knows {choice}!")
 				print()
 			cls()
-			print("Unrecognized move:", choice)
+			print(f"Unrecognized move: {choice}")
 			print()
 
 	def useMove(self, mymove, otherpoke, othermove):
@@ -139,10 +139,10 @@ class Pokemon(object):
 
 	def __repr__(self):
 		'''A string representation of a Pokemon'''
-		printstr = 'Lv.' + str(self.level) + ' ' + self.name +'        \n'
-		printstr += "Type: " + typeNames[self.type1] + ("/" + typeNames[self.type2] + '        \n' if self.type2 != Types.TYPELESS else '        \n')
-		printstr += "Height: " + str(self.height) +"m              \n"
-		printstr += "Weight: " + str(self.weight) +"kg             \n"
+		printstr = f'Lv. {self.level} {self.name}        \n'
+		printstr += f"Type: {typeNames[self.type1]} {('/' + typeNames[self.type2] if self.type2 != Types.TYPELESS else '')}        \n"
+		printstr += f"Height: {self.height}m              \n"
+		printstr += f"Weight: {self.weight}kg             \n"
 		printstr += "Gender: "
 		if self.gender == 'm':
 			printstr += 'Male              \n'
@@ -152,18 +152,18 @@ class Pokemon(object):
 			printstr += 'Genderless        \n'
 		else:
 			printstr += 'unset             \n'
-		printstr += "Nature: " + str(self.nature) + '              \n'
-		printstr += "MaxHP/CurrentHP: " + str(self.maxHP) + '/' + str(self.HP) + '\n'
-		printstr += "Attack: " + str(self.attack) + '              \n'
-		printstr += "Defense: " + str(self.defense) + '            \n'
-		printstr += "Special Attack: " + str(self.specialAttack) + '        \n'
-		printstr += "Special Defense: " + str(self.specialDefense) + '        \n'
-		printstr += "Speed: " + str(self.speed) + '                \n'
+		printstr += f"Nature: {self.nature}              \n"
+		printstr += f"MaxHP/CurrentHP: {self.maxHP}/{self.HP}\n"
+		printstr += f"Attack: {self.attack}              \n"
+		printstr += f"Defense: {self.defense}            \n"
+		printstr += f"Special Attack: {self.specialAttack}        \n"
+		printstr += f"Special Defense: {self.specialDefense}        \n"
+		printstr += f"Speed: {self.speed}                \n\n"
 		printstr += "        Moves                \n"
 		printstr += "=====================        \n"
 		for move in self.moves:
 			if move:
-				printstr += '\t' + str(move) + '             \n'
+				printstr += f"\t{move}             \n"
 
 
 		return printstr
@@ -174,12 +174,12 @@ def setEVs(pokemon):
 	while total:
 		print("Choose a stat to put Effort Values into (You have", total, "remaining EVs to spend)")
 		print()
-		print("[0]: HP              -\t", pokemon.EVs[0])
-		print("[1]: Attack          -\t", pokemon.EVs[1])
-		print("[2]: Defense         -\t", pokemon.EVs[2])
-		print("[3]: Special Attack  -\t", pokemon.EVs[3])
-		print("[4]: Special Defense -\t", pokemon.EVs[4])
-		print("[5]: Speed           -\t", pokemon.EVs[5])
+		print(f"[0]: HP              -\t{pokemon.EVs[0]}")
+		print(f"[1]: Attack          -\t{pokemon.EVs[1]}")
+		print(f"[2]: Defense         -\t{pokemon.EVs[2]}")
+		print(f"[3]: Special Attack  -\t{pokemon.EVs[3]}")
+		print(f"[4]: Special Defense -\t{pokemon.EVs[4]}")
+		print(f"[5]: Speed           -\t{pokemon.EVs[5]}")
 		print()
 		stat = input(":")
 		try:
@@ -245,7 +245,7 @@ def setLevel(pokemon):
 				break
 			else:
 				cls()
-				print(choice,"is not a valid level!")
+				print(f"{choice} is not a valid level!")
 				continue
 		except Exception as e:
 			cls()
@@ -254,7 +254,7 @@ def setLevel(pokemon):
 def setNature(pokemon):
 	'''Interactively sets a Pokemon's Nature'''
 	while not pokemon.nature:
-		print("Choose", pokemon.name+"'s nature")
+		print(f"Choose {pokemon.name}'s nature")
 		choice = input("(Nature, or 'l' to list natures): ")
 		if choice == 'l':
 			cls()
@@ -265,7 +265,7 @@ def setNature(pokemon):
 			pokemon.nature = choice
 			break
 		cls()
-		print("Not a nature: '"+choice+"'")
+		print(f"Not a nature: '{choice}'")
 
 def setup(pokemon):
 	'''Totally sets up a Pokemon, interactively.'''
