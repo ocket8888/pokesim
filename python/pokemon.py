@@ -8,9 +8,14 @@ from stats import *
 suffixes = {0:"st", 1:"nd", 2:"rd", 3:"th"}
 
 class Pokemon(object):
-	"""A class representing a pokemon, and all the information that entails"""
+	"""
+	A class representing a pokemon, and all the information that entails
+	"""
+
 	def __init__(self, name):
-		'''Creates a pokemon, reading in basic data from a file in `../data/pokemon/<name>`'''
+		"""
+		Creates a pokemon, reading in basic data from a file in `../data/pokemon/<name>`
+		"""
 		self.name = name
 
 		with open("../data/pokemon/"+name) as datafile:
@@ -51,8 +56,10 @@ class Pokemon(object):
 		self.nature = None
 
 	def setStats(self):
-		'''Sets a pokemons's stats based on its nature, EVs and base stats
-		(assumes perfect IVs)'''
+		"""
+		Sets a pokemons's stats based on its nature, EVs and base stats
+		(assumes perfect IVs)
+		"""
 		mults = statMult(self.nature)
 
 		self.maxHP = (2 * self.maxHP) + 31 + int( self.EVs[0] / 4.0 )
@@ -86,7 +93,9 @@ class Pokemon(object):
 		self.speed = int(self.speed * mults[4])
 
 	def setMove(self, moveNo):
-		'''An interactive routine to set the pokemon's `moveNo`th move'''
+		"""
+		An interactive routine to set the pokemon's `moveNo`th move
+		"""
 		available = { move[0] for move in self.availableMoves if move[1] <= self.level }
 		for index, move in enumerate(self.moves):
 			if move and index != moveNo:
@@ -112,7 +121,9 @@ class Pokemon(object):
 			print()
 
 	def useMove(self, mymove, otherpoke, othermove):
-		'''Handles what happens when a pokemon uses a move on another pokemon.'''
+		"""
+		Handles what happens when a pokemon uses a move on another pokemon.
+		"""
 		hitChance = randrange(101)
 		effacc = 100.0
 		if self.stages[ACCURACY] > 0:
@@ -138,7 +149,9 @@ class Pokemon(object):
 			print(f"It dealt {dmg} damage!")
 
 	def __repr__(self):
-		'''A string representation of a Pokemon'''
+		"""
+		A string representation of a Pokemon
+		"""
 		printstr = f'Lv. {self.level} {self.name}        \n'
 		printstr += f"Type: {typeNames[self.type1]} {('/' + typeNames[self.type2] if self.type2 != Types.TYPELESS else '')}        \n"
 		printstr += f"Height: {self.height}m              \n"
@@ -169,7 +182,9 @@ class Pokemon(object):
 		return printstr
 
 def setEVs(pokemon):
-	'''An interactive procedure to set the EVs of a given pokemon'''
+	"""
+	An interactive procedure to set the EVs of a given pokemon
+	"""
 	total = 510
 	while total:
 		print("Choose a stat to put Effort Values into (You have", total, "remaining EVs to spend)")
@@ -224,7 +239,9 @@ def setEVs(pokemon):
 		cls()
 
 def setGender(pokemon):
-	'''Interactively sets a Pokemon's gender'''
+	"""
+	Interactively sets a Pokemon's gender
+	"""
 	while pokemon.gender != 'n':
 		print("Choose the Pokemon's gender")
 		choice = input('(m/f): ')
@@ -235,7 +252,9 @@ def setGender(pokemon):
 		print("This ain't tumblr")
 
 def setLevel(pokemon):
-	'''interactively sets a Pokemon's level'''
+	"""
+	interactively sets a Pokemon's level
+	"""
 	while not pokemon.level:
 		print("Choose the Pokemon's level")
 		choice = input("[1-100]: ")
@@ -252,7 +271,9 @@ def setLevel(pokemon):
 			print("Please enter a number.")
 
 def setNature(pokemon):
-	'''Interactively sets a Pokemon's Nature'''
+	"""
+	Interactively sets a Pokemon's Nature
+	"""
 	while not pokemon.nature:
 		print(f"Choose {pokemon.name}'s nature")
 		choice = input("(Nature, or 'l' to list natures): ")
@@ -268,7 +289,9 @@ def setNature(pokemon):
 		print(f"Not a nature: '{choice}'")
 
 def setup(pokemon):
-	'''Totally sets up a Pokemon, interactively.'''
+	"""
+	Totally sets up a Pokemon, interactively.
+	"""
 	setGender(pokemon)
 	cls()
 	setLevel(pokemon)

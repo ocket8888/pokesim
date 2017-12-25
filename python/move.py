@@ -7,7 +7,9 @@ from stats import *
 
 @unique
 class MoveTypes(IntFlag):
-	"""Enumerated move tyes"""
+	"""
+	Enumerated move tyes
+	"""
 	STATUS   =	0
 	SPECIAL  =	1
 	PHYSICAL =	2
@@ -17,9 +19,13 @@ moveTypeNames = {MoveTypes.STATUS:	"Status",
                  MoveTypes.PHYSICAL:	"Physical"}
 
 class Move():
-	"""A pokemon's move"""
+	"""
+	A pokemon's move
+	"""
 	def __init__(self, name):
-		'''Reads in a move's data. Expects it in `../data/moves/<name>`'''
+		"""
+		Reads in a move's data. Expects it in `../data/moves/<name>`
+		"""
 		self.name = name
 		self.priority = 0
 
@@ -58,7 +64,9 @@ class Move():
 		self.affectedStat = int(lines.pop())
 
 	def calcDmg(self, pkmn, otherpkmn, othermove):
-		'''Calculates damage done by pkmn to otherpkmn (who used 'othermove', if that matters)'''
+		"""
+		Calculates damage done by pkmn to otherpkmn (who used 'othermove', if that matters)
+		"""
 		dmg = 2 * pkmn.level / 5.0
 		dmg += 2
 		dmg *= self.power

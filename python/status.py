@@ -2,7 +2,9 @@ from enum import IntFlag, unique
 
 @unique
 class Status(IntFlag):
-	"""Enumerated statuses"""
+	"""
+	Enumerated statuses
+	"""
 	NON = 0
 	PAR = 1
 	PSN = 2

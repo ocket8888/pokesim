@@ -2,7 +2,9 @@ from enum import IntFlag, unique
 
 @unique
 class Types(IntFlag):
-	"""An enumerated list of valid types for pokemon and moves"""
+	"""
+	An enumerated list of valid types for pokemon and moves
+	"""
 	NORMAL	 =	0
 	FIGHTING =	1
 	FLYING	 =	2

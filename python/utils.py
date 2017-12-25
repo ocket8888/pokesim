@@ -3,14 +3,19 @@ from status import Status
 from random import randrange
 
 def cls():
-	'''Clears the terminal screen. It's really slow, but there's no other way afaik'''
+	"""
+	Clears the terminal screen. It's not portable to terminals that don't recognize ANSI
+	control codes (e.g. on DOS), but there's no other efficient way afaik
+	"""
 	print("\033[H\033[J")
 
 def colorPrint(text, color):
 	print("\033[38;2;"+';'.join(color)+'m'+text+"\033[38;2;255;255;255m")
 
 def decideOrder(poke0, move0, poke1, move1):
-	'''Given two pokemon and their chosen moves, determines which one should go first'''
+	"""
+	Given two pokemon and their chosen moves, determines which one should go first
+	"""
 	if move0.priority > move1.priority:
 		return 0
 	elif move0.priority < move1.priority:

@@ -33,7 +33,9 @@ def statMult(nature):
 	return mults
 
 def printNatures():
-	'''Pretty-prints natures for display'''
+	"""
+  Pretty-prints natures for display
+  """
 	stats = ["attack", "defense", "special attack", "special defense", "speed"]
 	for nature in Natures:
 		printme = f"{nature}: "
