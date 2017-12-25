@@ -7,6 +7,3 @@ SPEED           = 5
 CRIT            = 6
 ACCURACY        = 7
 EVASIVENESS     = 8
-
-def MoveHits(attacker, defender):
-	pass

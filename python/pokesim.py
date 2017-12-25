@@ -121,6 +121,6 @@ while True:
 			break
 
 if playerWon:
-	print("The opponent's {opponentPokemon.name} fainted.\nYou Win!")
+	print(f"The opponent's {opponentPokemon.name} fainted.\nYou Win!")
 else:
-	print("{userPokemon.name} fainted.\nYou lose...")
+	print(f"{userPokemon.name} fainted.\nYou lose...")

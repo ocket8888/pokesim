@@ -135,7 +135,7 @@ class Pokemon(object):
 			otherpoke.HP -= dmg
 			if otherpoke.HP < 0:
 				otherpoke.HP = 0
-			print(self.name, "dealt", dmg, "damage!")
+			print(f"It dealt {dmg} damage!")
 
 	def __repr__(self):
 		'''A string representation of a Pokemon'''

@@ -25,14 +25,37 @@ class Move():
 
 		with open("../data/moves/"+name) as datafile:
 			lines = datafile.read().split('\n')
-			self.type1 = int(lines[0])
-			self.type2 = int(lines[1])
-			self.moveType = int(lines[2])
-			self.contact = bool(int(lines[3]))
-			self.power = int(lines[4])
-			self.crit = bool(int(lines[5]))
-			self.accuracy = int(lines[6])
-			self.PP = int(lines[7])
+			_ = lines.pop() #eliminates POSIX-compliant empty line at file end
+			self.type1 = int(lines.pop(0))
+			self.type2 = int(lines.pop(0))
+			self.contact = bool(lines.pop(0))
+			self.accuracy = int(lines.pop(0))
+			self.PP = int(lines.pop(0))
+			self.moveType = int(lines.pop(0))
+
+		print(lines)
+		
+		if self.moveType:
+			self.damagingMove(lines)
+		else:
+			self.statusMove(lines)
+
+	def damagingMove(self, lines):
+		"""
+		Builds a damaging move from the remaining lines in a file after common
+		attributes have already been parsed out
+		"""
+		self.crit = int(lines.pop())
+		self.power = int(lines.pop())
+
+	def statusMove(self, lines):
+		"""
+		Builds a status move from the remaining lines in a file after common
+		attributes have already been parsed out
+		"""
+		self.target = bool(lines.pop())
+		self.stageChange = int(lines.pop())
+		self.affectedStat = int(lines.pop())
 
 	def calcDmg(self, pkmn, otherpkmn, othermove):
 		'''Calculates damage done by pkmn to otherpkmn (who used 'othermove', if that matters)'''
@@ -106,3 +129,4 @@ class Move():
 
 	def __str__(self):
 		return self.name
+		

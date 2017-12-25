@@ -1,8 +1,9 @@
 type1
 type2
-status/special/physical
 contact?
-power
-crit
 accuracy
 PP
+status/special/physical
+power OR affected stat index
+crit OR stages
+NOTHING OR target {0: opponent, 1: self}
