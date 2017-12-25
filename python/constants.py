@@ -63,14 +63,14 @@ CRIT            = 6
 ACCURACY        = 7
 EVASIVENESS     = 8
 
-statnames = {HP              : "Hitpoints"
-             ATTACK          : "Attack"
-             DEFENSE         : "Defense"
-             SPECIAL_ATTACK  : "Special Attack"
-             SPECIAL_DEFENSE : "Special Defense"
-             SPEED           : "Speed"
-             CRIT            : "Critical Ratio"
-             ACCURACY        : "Accuracy"
+statnames = {HP              : "Hitpoints",
+             ATTACK          : "Attack",
+             DEFENSE         : "Defense",
+             SPECIAL_ATTACK  : "Special Attack",
+             SPECIAL_DEFENSE : "Special Defense",
+             SPEED           : "Speed",
+             CRIT            : "Critical Ratio",
+             ACCURACY        : "Accuracy",
              EVASIVENESS     : "Evasiveness"}
 
 NON = 0
@@ -83,6 +83,6 @@ FRZ = 5
 statusnames = {NON: "",
                PAR: "Paralyzed",
                PSN: "Poisoned",
-               BRN: "Burned"
+               BRN: "Burned",
                SLP: "Asleep",
                FRZ: "Frozen"}

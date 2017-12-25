@@ -2,6 +2,10 @@ from random import uniform
 from math import floor
 from constants import *
 
+
+def critical(movecrit, pokestages):
+	effectivestage = movecrit + pokestages % 7
+
 class Move():
 	"""
 	A pokemon's move

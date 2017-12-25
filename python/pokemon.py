@@ -159,7 +159,7 @@ class Pokemon(object):
 		A string representation of a Pokemon
 		"""
 		printstr = f'Lv. {self.level} {self.name}        \n'
-		printstr += f"Type: {typeNames[self.type1]} {('/' + typeNames[self.type2] if self.type2 != Types.TYPELESS else '')}        \n"
+		printstr += f"Type: {typenames[self.type1]}{('/' + typenames[self.type2] if self.type2 != TYPELESS else '')}        \n"
 		printstr += f"Height: {self.height}m              \n"
 		printstr += f"Weight: {self.weight}kg             \n"
 		printstr += "Gender: "

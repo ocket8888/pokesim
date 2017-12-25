@@ -1,4 +1,4 @@
-from status import Status
+from constants import *
 from random import randrange
 
 def cls():
@@ -28,7 +28,7 @@ def decideOrder(poke0, move0, poke1, move1):
 	elif poke0.stages[4] < 0:
 		effsp0 *= 2.0/(2.0 - poke0.stages[4])
 
-	if poke0.status == Status.PAR:
+	if poke0.status == PAR:
 		effsp0 /= 2.0
 
 	if poke1.stages[4] > 0:
@@ -36,7 +36,7 @@ def decideOrder(poke0, move0, poke1, move1):
 	elif poke1.stages[4] < 0:
 		effsp1 *= 2.0/(2.0 - poke1.stages[4])
 
-	if poke1.status == Status.PAR:
+	if poke1.status == PAR:
 		effsp1 /= 2.0
 
 	#Use effective speed to calculate order
