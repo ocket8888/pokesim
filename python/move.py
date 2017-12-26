@@ -4,7 +4,16 @@ from constants import *
 
 
 def critical(movecrit, pokestages):
-	effectivestage = movecrit + pokestages % 7
+	effectivestage = (movecrit + pokestages)
+
+	if effectivestage > 3:
+		return 1.5
+
+	ratio = 1.0 / (2 ** (4-effectivestage))
+	critChance = uniform(0,1)
+
+	return (1.5 if ratio > critChance else 1)
+
 
 class Move():
 	"""
@@ -59,6 +68,10 @@ class Move():
 		dmg += 2
 		dmg *= self.power
 
+		crit = critical(self.crit, pkmn.stages[CRIT])
+		if crit > 1:
+			print("Critical Hit!")
+
 		effat, effdef = 0.0, 0.0
 
 		#Physical attack
@@ -67,12 +80,12 @@ class Move():
 
 			if pkmn.stages[ATTACK] > 0:
 				effat *= (2.0 + pkmn.stages[ATTACK]) / 2.0
-			if pkmn.stages[ATTACK] < 0:
+			if pkmn.stages[ATTACK] < 0 and crit == 1:
 				effat *= 2.0 / (2.0 - pkmn.stages[ATTACK])
 
 			effdef = otherpkmn.defense
 
-			if otherpkmn.stages[DEFENSE] > 0:
+			if otherpkmn.stages[DEFENSE] > 0 and crit ==1:
 				effdef *= (2.0 + otherpkmn.stages[DEFENSE]) / 2.0
 			elif otherpkmn.stages[DEFENSE] < 0:
 				effdef *= 2.0 / (2.0 - otherpkmn.stages[DEFENSE])
@@ -81,17 +94,17 @@ class Move():
 		elif self.moveType == SPECIAL:
 			effat = pkmn.specialAttack
 
-			if pkmn.stages[2] > 0:
-				effat *= (2.0 + pkmn.stages[2]) / 2.0
-			if pkmn.stages[2] < 0:
-				effat *= 2.0 / (2.0 - pkmn.stages[2])
+			if pkmn.stages[SPECIAL_ATTACK] > 0:
+				effat *= (2.0 + pkmn.stages[SPECIAL_ATTACK]) / 2.0
+			if pkmn.stages[SPECIAL_ATTACK] < 0 and crit ==1:
+				effat *= 2.0 / (2.0 - pkmn.stages[SPECIAL_ATTACK])
 
 			effdef = otherpkmn.specialDefense
 
-			if otherpkmn.stages[3] > 0:
-				effdef *= (2.0 + otherpkmn.stages[3]) / 2.0
-			elif otherpkmn.stages[3] < 0:
-				effdef *= 2.0 / (2.0 - otherpkmn.stages[3])
+			if otherpkmn.stages[SPECIAL_DEFENSE] > 0 and crit ==1:
+				effdef *= (2.0 + otherpkmn.stages[SPECIAL_DEFENSE]) / 2.0
+			elif otherpkmn.stages[SPECIAL_DEFENSE] < 0:
+				effdef *= 2.0 / (2.0 - otherpkmn.stages[SPECIAL_DEFENSE])
 
 		dmg *= effat/effdef
 		dmg /= 50
@@ -110,7 +123,7 @@ class Move():
 		if pkmn.status == BRN and self.moveType == PHYSICAL:
 			mod /= 2.0
 
-		dmg *= mod
+		dmg *= mod * crit
 
 		return int(dmg * mod)
 
