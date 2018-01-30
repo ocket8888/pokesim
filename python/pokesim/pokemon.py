@@ -3,6 +3,7 @@ Defines data structures and routines for dealing with a pokemon and its various 
 """
 
 import random
+import os
 from . import nature
 from . import move
 from . import utils
@@ -22,7 +23,7 @@ class Pokemon():
 		"""
 		self.name = name
 
-		with open("../data/pokemon/"+name) as datafile:
+		with open(os.path.join(utils.dataDir, "pokemon", name)) as datafile:
 			lines = datafile.read().split("\n")
 			self.type1 = poketypes.Type(int(lines[0]))
 			self.type2 = poketypes.Type(int(lines[1]))

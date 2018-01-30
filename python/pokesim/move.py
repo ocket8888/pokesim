@@ -6,8 +6,10 @@ Defines data structures and routines for dealing with a pokemon's move
 import random
 import typing
 import enum
+import os
 from . import constants
 from . import poketypes
+from . import utils
 
 
 def critical(movecrit: int, pokestages:int) -> float:
@@ -55,7 +57,7 @@ class Move():
 		self.name = name
 		self.priority = 0
 
-		with open("../data/moves/"+name) as datafile:
+		with open(os.path.join(utils.dataDir, "moves", name)) as datafile:
 			lines = datafile.read().split('\n')
 			_ = lines.pop() #eliminates POSIX-compliant empty line at file end
 			self.type1 = int(lines.pop(0))
