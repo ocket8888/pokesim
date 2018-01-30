@@ -131,9 +131,32 @@ class Pokemon():
 			utils.cls()
 			print("Unrecognized move: '%s'\n" % choice)
 
-	def useMove(self, mymove: move.Move, otherpoke: move.Move, othermove: 'Pokemon'):
+	def changeStage(self, stat: constants.Stats, amt: int) -> str:
+		"""
+		Changes a Pokemon's stat (specified by 'stat') stage by the given amount.
+		Returns a string describing what took place.
+		"""
+		if amt > 0 and self.stages[stat] >= 6:
+			self.stages[stat] = 6
+			return "%s's %s won't go any higher!" % (self, stat)
+		elif amt < 0 and self.stages[stat] <= 6:
+			self.stages[stat] = -6
+			return "%s's %s won't go any lower!" % (self, stat)
+
+		self.stages[stat] = (self.stages[stat] + amt )
+		if self.stages[stat] > 6:
+			self.stages[stat] = 6
+		elif self.stages[stat] < -6:
+			self.stages[stat] = -6
+
+		return "%s's %s %s" % (self, stat, constants.statChangeFlavorText(amt))
+
+
+
+	def useMove(self, mymove: move.Move, otherpoke: move.Move, othermove: 'Pokemon') -> str:
 		"""
 		Handles what happens when a pokemon uses a move on another pokemon.
+		Returns a string describing the interaction
 		"""
 		hitChance = random.randrange(101)
 		effacc = 100.0
@@ -149,8 +172,7 @@ class Pokemon():
 			effev *= 3.0 / ( 3 + otherpoke.stages[constants.EVASIVENESS] )
 
 		if hitChance > int(mymove.accuracy * effacc / effev ):
-			print("... but it %s!" % ('missed' if mymove.moveType != move.STATUS else 'failed'))
-			return
+			return "... but it %s!" % ('missed' if mymove.moveType != move.STATUS else 'failed')
 
 		# Some damaging move, either physical or special
 		if mymove.moveType != move.STATUS:
@@ -158,33 +180,12 @@ class Pokemon():
 			otherpoke.HP -= dmg
 			if otherpoke.HP < 0:
 				otherpoke.HP = 0
-			print("It dealt %d damage!" % dmg)
+			return "It dealt %d damage!" % dmg
 
 		# Some status move
 		else:
 			targetPoke = otherpoke if mymove.target else self
-			currentStage = targetPoke.stages[mymove.affectedStat]
-
-			if currentStage + mymove.stageChange < -6:
-				print("%s's %s won't go any lower!" % (targetPoke, mymove.affectedStat))
-				return
-			if currentStage + mymove.stageChange > 6:
-				print("%s's %s won't go any higher!" % (targetPoke, mymove.affectedStat))
-				return
-
-			print("%s's %s %s" % (targetPoke,
-				                  mymove.affectedStat,
-				                  constants.statChangeFlavorText(mymove.stageChange)))
-
-			# TODO - This is a good use case for a setter on stat stages,
-			#esp. since eventually a single move will be able to affect multiple stats
-			newStage = currentStage + mymove.stageChange
-			if newStage < -6:
-				newStage = -6
-			elif newStage > 6:
-				newStage = 6
-
-			targetPoke.stages[mymove.affectedStat] = newStage
+			return targetPoke.changeStage(mymove.affectedStat, mymove.stageChange)
 
 	def __repr__(self) -> str:
 		"""
