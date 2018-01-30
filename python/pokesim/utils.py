@@ -11,6 +11,36 @@ from . import constants
 from . import pokemon
 from . import move
 
+
+###################################################################################################
+###                                                                                             ###
+###                                         CONSTANTS                                           ###
+###                                                                                             ###
+###################################################################################################
+
+# Background Color ANSI sequences
+RED_BACKGROUND = "\033[48;2;255;0;0m"
+GREEN_BACKGROUND = "\033[48;2;0;255;0m"
+
+# Foreground Color ANSI sequenses
+WHITE_FOREGROUND = "\033[38;2;255;255;255m"
+
+# Resets fore and background colors to their native settings (also restores cursor position)
+NATIVE = "\033[m"
+
+# The os.PathLike object that points to the top-level data directory
+dataDir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "data")
+
+# Defines a 'Color' type for type hinting
+Color = typing.NewType('Color', typing.Tuple[int, int, int])
+
+
+###################################################################################################
+###                                                                                             ###
+###                                         FUNCTIONS                                           ###
+###                                                                                             ###
+###################################################################################################
+
 def getTTYsize() -> os.terminal_size:
 	"""
 	Returns the terminal size
@@ -55,41 +85,37 @@ def printHealthBars(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokem
 	if opponenthpblocks < 1 and opponentPokemon.HP > 0:
 		opponenthpblocks = 1
 
-	print("\033[38;2;255;255;255m", end='')
+	print(WHITE_FOREGROUND, end='')
 
 	# User's pokemon
 	if userhpblocks > 0:
-		print("\033[48;2;0;255;0m", end='')
+		print(GREEN_BACKGROUND, end='')
 	for i, char in enumerate("{:4d}/{:<4d}".format(userPokemon.HP, userPokemon.maxHP)):
 		if i == userhpblocks:
-			print("\033[48;2;255;0;0m", end='')
+			print(RED_BACKGROUND, end='')
 		print(char, end='')
-	if userhpblocks > 9:
-		print(" "*(userhpblocks-9), end='')
-		print("\033[48;2;255;0;0m%s" % (' '*(sepPos - userhpblocks)), end='')
-	else:
+	if userhpblocks < 9:
 		print(" "*(sepPos - 9), end='')
+	else:
+		print(" "*(userhpblocks-9), end='')
+		print("%s%s" % (RED_BACKGROUND, ' '*(sepPos - userhpblocks)), end='')
 
-	print("\033[m", end=' ')
+	print(NATIVE, WHITE_FOREGROUND, end='')
 
 	# Opponent's Pokemon
-	print("\033[38;2;255;255;255m", end='')
 	if opponenthpblocks > 0:
-		print("\033[48;2;0;255;0m", end='')
+		print(GREEN_BACKGROUND, end='')
 	for i, char in enumerate("{:4d}/{:<4d}".format(opponentPokemon.HP, opponentPokemon.maxHP)):
 		if i == opponenthpblocks:
-			print("\033[48;2;255;0;0m", end='')
+			print(RED_BACKGROUND, end='')
 		print(char, end='')
-	if opponenthpblocks > 9:
-		print(" "*(opponenthpblocks-10), end='')
-		print("\033[48;2;255;0;0m%s" % (' '*(opponentSpace - opponenthpblocks - 1)), end='')
-	else:
+	if opponenthpblocks < 9:
 		print(" "*(opponentSpace - 10), end='')
-	print("\033[m")
+	else:
+		print(" "*(opponenthpblocks-10), end='')
+		print("%s%s" % (RED_BACKGROUND, ' '*(opponentSpace - opponenthpblocks - 1)), end='')
+	print(NATIVE)
 
-dataDir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "data")
-
-Color = typing.NewType('Color', typing.Tuple[int, int, int])
 
 def colorSprintf(text: str, color: Color) -> str:
 	"""
@@ -111,12 +137,6 @@ def cls():
 	control codes (e.g. on DOS), but there's no other efficient way afaik
 	"""
 	print("\033[H\033[J")
-
-def colorPrint(text: str, color: Color):
-	"""
-	Prints the given text to stdout in the color specified by Color
-	"""
-	print("\033[38;2;"+';'.join([str(byte) for byte in color])+'m'+text+"\033[38;2;255;255;255m")
 
 def decideOrder(poke0: pokemon.Pokemon, move0: move.Move,
                 poke1: pokemon.Pokemon, move1: move.Move) -> int:
@@ -171,5 +191,6 @@ def dumpPokemon(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokemon):
 	userLines = repr(userPokemon).split('\n')
 	opponentLines = repr(opponentPokemon).split('\n')
 	print("        ".join((userLines.pop(0), "versus", opponentLines.pop(0))))
-	print("\n".join(("                ".join((line, opponentLines[i])) for i, line in enumerate(userLines))))
+	print("\n".join(("                ".join((line, opponentLines[i]))
+	                                          for i, line in enumerate(userLines))))
 	print()
