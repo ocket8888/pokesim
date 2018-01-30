@@ -1,5 +1,8 @@
 # README in markdown format
 include README.md
 
+# Pokemon and Move Data
+include pokesim/data/
+
 # License information
 include LICENSE.txt

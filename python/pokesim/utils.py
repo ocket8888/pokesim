@@ -87,7 +87,7 @@ def printHealthBars(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokem
 		print(" "*(opponentSpace - 10), end='')
 	print("\033[m")
 
-dataDir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "data")
+dataDir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "data")
 
 Color = typing.NewType('Color', typing.Tuple[int, int, int])
 
@@ -162,10 +162,7 @@ def gracefulExit():
 	"""
 	cls()
 	print('Shutting down')
-	try:
-		exit(0)
-	except SystemExit:
-		os._exit(0)
+	exit(0)
 
 def dumpPokemon(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokemon):
 	"""
