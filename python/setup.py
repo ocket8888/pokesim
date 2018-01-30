@@ -12,18 +12,7 @@ import codecs
 # Always prefer setuptools over distutils
 from setuptools import setup
 
-
-HERE = os.path.abspath(os.path.dirname(__file__))
-
-def package_files(directory: os.PathLike) -> list:
-	"""
-	Gets all data files in the given directory for easy passing to 'package_data'
-	"""
-	paths = []
-	for path, _, files in os.walk(directory):
-		for file in files:
-			paths.append(os.path.join('..', path, file))
-	return paths
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 # Get the long description from the README file
 with codecs.open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
@@ -31,7 +20,6 @@ with codecs.open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
-
 setup(
 	# This is the name of your project. The first time you publish this
 	# package, this name will be registered for you. It will determine how
@@ -151,9 +139,11 @@ setup(
 	#
 	# If using Python 2.6 or earlier, then these have to be included in
 	# MANIFEST.in as well.
-	package_data={  # Optional
-		'pokesim': package_files(os.path.join(HERE, 'pokesim', 'data')),
-	},
+	# package_data={  # Optional
+	# 	'pokesim': ['data/moves/*', 'data/pokemon/*'],
+	# },
+
+	include_package_data=True,
 
 	# Although 'package_data' is the preferred approach, in some case you may
 	# need to place data files outside of your packages. See:
