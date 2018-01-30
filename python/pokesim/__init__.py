@@ -38,6 +38,7 @@ def chooseAMove(poke: pokemon.Pokemon, opponent: pokemon.Pokemon=None) -> move.M
 	Gets a move choice from the user
 	"""
 	while True:
+		utils.printHealthBars(poke, opponent)
 		for moveNumber, mv in enumerate(poke.moves):
 			print("[%d]: %s" % (moveNumber + 1, mv))
 		print("[5] Print Pokemon for debugging")
@@ -103,16 +104,21 @@ def main() -> int:
 		order = utils.decideOrder(userPokemon, choice, opponentPokemon, choice)
 
 		if order:
-			print("The opponent's %s used %s!" % (opponentPokemon, opponentChoice))
 			opponentPokemon.useMove(opponentChoice, userPokemon, choice)
+			utils.printHealthBars(userPokemon, opponentPokemon)
+			print("The opponent's %s used %s!" % (opponentPokemon, opponentChoice))
 			if not userPokemon.HP:
 				break
 			elif not opponentPokemon.HP:
 				playerWon = True
 				break
 
-			print("%s used %s!" % (userPokemon, choice))
+			utils.cls()
+
 			userPokemon.useMove(choice, opponentPokemon, opponentChoice)
+			utils.printHealthBars(userPokemon, opponentPokemon)
+			print("The opponent's %s used %s!" % (opponentPokemon, opponentChoice))
+			print("%s used %s!" % (userPokemon, choice))
 			if not userPokemon.HP:
 				break
 			elif not opponentPokemon.HP:
