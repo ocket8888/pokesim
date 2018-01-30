@@ -96,50 +96,51 @@ def main() -> int:
 
 		# Player chooses a move
 		choice = chooseAMove(userPokemon, opponentPokemon)
+		choiceStr = "%s used %s!" % (userPokemon, choice)
 
 		#opponent chooses a move
 		utils.cls()
 		opponentChoice = opponentPokemon.moves[random.randrange(4)]
+		opponentChoiceStr = "The opponent's %s used %s!" % (opponentPokemon, opponentChoice)
 
 		order = utils.decideOrder(userPokemon, choice, opponentPokemon, choice)
 
 		if order:
-			opponentPokemon.useMove(opponentChoice, userPokemon, choice)
-			utils.printHealthBars(userPokemon, opponentPokemon)
-			print("The opponent's %s used %s!" % (opponentPokemon, opponentChoice))
-			if not userPokemon.HP:
-				break
-			elif not opponentPokemon.HP:
-				playerWon = True
+			opponentEvents = opponentPokemon.useMove(opponentChoice, userPokemon, choice)
+			if not userPokemon.HP or not opponentPokemon.HP:
+				utils.printHealthBars(userPokemon, opponentPokemon)
+				print(opponentChoiceStr)
+				print(opponentEvents)
+				playerWon = not opponentPokemon.HP
 				break
 
-			utils.cls()
-
-			userPokemon.useMove(choice, opponentPokemon, opponentChoice)
+			userEvents = userPokemon.useMove(choice, opponentPokemon, opponentChoice)
 			utils.printHealthBars(userPokemon, opponentPokemon)
-			print("The opponent's %s used %s!" % (opponentPokemon, opponentChoice))
-			print("%s used %s!" % (userPokemon, choice))
-			if not userPokemon.HP:
-				break
-			elif not opponentPokemon.HP:
-				playerWon = True
+			print(opponentChoiceStr)
+			print(opponentEvents)
+			print(choiceStr)
+			print(userEvents)
+			if not userPokemon.HP or not opponentPokemon.HP:
+				playerWon = not opponentPokemon.HP
 				break
 
 		else:
-			print("%s used %s!" % (userPokemon, choice))
-			userPokemon.useMove(choice, opponentPokemon, opponentChoice)
-			if not userPokemon.HP:
-				break
-			elif not opponentPokemon.HP:
-				playerWon = True
+			userEvents = userPokemon.useMove(choice, opponentPokemon, opponentChoice)
+			if not userPokemon.HP or not opponentPokemon.HP:
+				utils.printHealthBars(userPokemon, opponentPokemon)
+				print(choiceStr)
+				print(userEvents)
+				playerWon = not opponentPokemon.HP
 				break
 
-			print("The opponent's %s used %s!" % (opponentPokemon, opponentChoice))
-			opponentPokemon.useMove(opponentChoice, userPokemon, choice)
-			if not userPokemon.HP:
-				break
-			elif not opponentPokemon.HP:
-				playerWon = True
+			opponentEvents = opponentPokemon.useMove(opponentChoice, userPokemon, choice)
+			utils.printHealthBars(userPokemon, opponentPokemon)
+			print(choiceStr)
+			print(userEvents)
+			print(opponentChoiceStr)
+			print(opponentEvents)
+			if not userPokemon.HP or not opponentPokemon.HP:
+				playerWon = not opponentPokemon.HP
 				break
 
 	if playerWon:
