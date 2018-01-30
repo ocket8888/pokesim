@@ -2,7 +2,7 @@
 include README.md
 
 # Pokemon and Move Data
-include pokesim/data/
+recursive-include pokesim/data/ *
 
 # License information
 include LICENSE.txt
