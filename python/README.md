@@ -1,0 +1,2 @@
+# pokesim
+This package contains a playable pokemon battle simulation game. Currently supports only a small part of one Pokemon's moveset. Aims for Gen VII compatibility; future generations are not guaranteed to be playable. Also will not feature Mega Evolutions or Z-Moves for the forseeable future. Double, Triple, Rotation and other misc. battle types are a huge stretch goal, behind supporting multi-Pokemon teams.

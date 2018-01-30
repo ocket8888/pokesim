@@ -1,0 +1,5 @@
+# README in markdown format
+include README.md
+
+# License information
+include LICENSE.txt
