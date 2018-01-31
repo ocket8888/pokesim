@@ -201,7 +201,8 @@ class Pokemon():
 			                                   ("Genderless" if self.gender == 'n' else
 			                                    "unset"))))
 		printstr.append("Nature: {: <24s}".format(self.nature if self.nature else 'unset'))
-		printstr.append("Status: {: <24s}".format(str(self.status) if self.status != constants.NON else "Healthy"))
+		printstr.append("Status: {: <24s}".format(
+		                str(self.status) if self.status != constants.NON else "Healthy"))
 		printstr.append("MaxHP/CurrentHP: %4d/%4d%s" % (self.maxHP, self.HP, ' '*6))
 		printstr.append("Attack: %3d (Stage: %+d)%s" % (self.attack,
 		                                               self.stages[constants.ATTACK],
