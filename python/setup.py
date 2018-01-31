@@ -82,6 +82,9 @@ setup(
 		#   5 - Production/Stable
 		'Development Status :: 3 - Alpha',
 
+		'Environment :: Console',
+		'Natural Language :: English'
+
 		# Indicate who your project is intended for
 		'Intended Audience :: End Users/Desktop',
 		'Topic :: Games/Entertainment :: Role-Playing',
@@ -120,7 +123,7 @@ setup(
 	#
 	# For an analysis of "install_requires" vs pip's requirements files see:
 	# https://packaging.python.org/en/latest/requirements.html
-	install_requires=['typing'],  # Optional
+	install_requires=['typing', 'setuptools'],  # Optional
 
 	# List additional groups of dependencies here (e.g. development
 	# dependencies). Users will be able to install these using the "extras"
