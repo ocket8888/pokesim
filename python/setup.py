@@ -83,11 +83,12 @@ setup(
 		'Development Status :: 3 - Alpha',
 
 		# Indicate who your project is intended for
-		'Intended Audience :: Pokemon Enthusiasts',
-		'Topic :: Pokemon :: Game',
+		'Intended Audience :: End Users/Desktop',
+		'Topic :: Games/Entertainment :: Role-Playing',
+		'Topic :: Games/Entertainment :: Simulation',
 
 		# Pick your license as you wish
-		'License :: None :: None',
+		'License :: Public Domain',
 
 		# Specify the Python versions you support here. In particular, ensure
 		# that you indicate whether you support Python 2, Python 3 or both.
