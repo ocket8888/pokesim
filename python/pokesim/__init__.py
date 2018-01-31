@@ -147,3 +147,12 @@ def main() -> int:
 		print("The opponent's %s fainted.\nYou Win!" % opponentPokemon)
 	else:
 		print("%s fainted.\nYou lose..." % userPokemon)
+
+def run():
+	"""
+	A wrapper for main to catch the user quitting for less ugly ends to the program
+	"""
+	try:
+		main()
+	except (KeyboardInterrupt, EOFError):
+		exit(0)
