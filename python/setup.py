@@ -83,7 +83,7 @@ setup(
 		'Development Status :: 3 - Alpha',
 
 		'Environment :: Console',
-		'Natural Language :: English'
+		'Natural Language :: English',
 
 		# Indicate who your project is intended for
 		'Intended Audience :: End Users/Desktop',
