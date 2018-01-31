@@ -313,7 +313,7 @@ def setLevel(pokemon: Pokemon):
 				break
 			else:
 				utils.cls()
-				print(f"{choice} is not a valid level!")
+				print("%d is not a valid level!" % choice)
 				continue
 		except ValueError:
 			utils.cls()
@@ -335,7 +335,7 @@ def setNature(pokemon: Pokemon):
 			pokemon.nature = choice
 			break
 		utils.cls()
-		print(f"Not a nature: '{choice}'")
+		print("Not a nature: '%s'" % choice)
 
 def setup(pokemon: Pokemon):
 	"""
