@@ -4,9 +4,12 @@
 This package contains the functionality for a fully-playable pokemon battle simulation.
 """
 
+__version__ = "0.1.3"
+
 import os
 import random
 import typing
+import sys
 from . import utils
 from . import pokemon
 from . import move
@@ -16,22 +19,30 @@ def chooseAPokemon(available: typing.Set[str], opponent: bool=False) -> pokemon.
 	Gets a pokemon from the user
 	"""
 
+	utils.setCompleter(available)
+
 	choiceStr = "your opponent's" if opponent else 'a'
 
 	while True:
-		choice = input("Choose %s Pokemon, or enter 'l' to list available Pokemon: " % (choiceStr))
+		print("Choose %s Pokémon" % choiceStr)
+		choice = input("(Pokémon Name, or 'l' list available Pokémon) [Bulbasaur]: ")
 
 		if choice == 'l':
 			utils.cls()
 			print('\n'.join(available))
 			continue
 		elif choice in available:
-			utils.cls()
+			break
+		elif not choice:
+			choice = "Bulbasaur"
 			break
 		else:
-			print("'%s' is not a recognized Pokemon!" % choice)
+			print("'%s' is not a recognized Pokémon!" % choice)
 
-	return pokemon.Pokemon(choice)
+	utils.cls()
+	poke = pokemon.Pokemon(choice)
+	pokemon.setup(poke)
+	return poke
 
 def chooseAMove(poke: pokemon.Pokemon, opponent: pokemon.Pokemon=None) -> move.Move:
 	"""
@@ -39,23 +50,27 @@ def chooseAMove(poke: pokemon.Pokemon, opponent: pokemon.Pokemon=None) -> move.M
 	"""
 	while True:
 		utils.printHealthBars(poke, opponent)
+		print("Choose a move:")
 		for moveNumber, mv in enumerate(poke.moves):
-			print("[%d]: %s" % (moveNumber + 1, mv))
-		print("[5] Print Pokemon for debugging")
+			print("[{:d}]: {:<30s}{:2d}/{:<2d}".format(moveNumber + 1, str(mv), mv.PP, mv.maxPP))
+		print("[5] Print Pokémon for debugging")
 		try:
-			choice = int(input("Choose a move: "))
+			choice = int(input("(1-5): "))
 		except ValueError:
 			utils.cls()
 			print("Please enter a number.\n")
 		else:
 			if choice in range(1, 5):
 				choice = poke.moves[choice - 1]
-				break
+				if choice.PP:
+					break
+				utils.cls()
+				print("Out of PP!")
 			elif choice == 5:
 				utils.dumpPokemon(poke, opponent)
 			else:
 				utils.cls()
-				print("Please enter a number from 1 to 4\n")
+				print("Please enter a number from 1 to 5\n")
 
 	return choice
 
@@ -69,22 +84,18 @@ def main() -> int:
 	available_pokemon = set(os.listdir(os.path.join(utils.dataDir, "pokemon")))
 	utils.cls()
 
-	print("Welcome to the Pokemon Battle Simulator (written in Python3)!\n")
+	print("Welcome to the Pokémon Battle Simulator (written in Python3)!\n")
 
 	userPokemon = chooseAPokemon(available_pokemon)
-	pokemon.setup(userPokemon)
 
 	utils.cls()
 
 	opponentPokemon = chooseAPokemon(available_pokemon, True)
-	pokemon.setup(opponentPokemon)
 	utils.cls()
 
 	# Prints the opposing pokemon
 	print("Battle Starting!\n")
 	utils.dumpPokemon(userPokemon, opponentPokemon)
-
-	random.seed()
 
 	playerWon = False
 
@@ -109,17 +120,13 @@ def main() -> int:
 			opponentEvents = opponentPokemon.useMove(opponentChoice, userPokemon, choice)
 			if not userPokemon.HP or not opponentPokemon.HP:
 				utils.printHealthBars(userPokemon, opponentPokemon)
-				print(opponentChoiceStr)
-				print(opponentEvents)
+				print("%s\n%s" % (opponentChoiceStr, opponentEvents))
 				playerWon = not opponentPokemon.HP
 				break
 
 			userEvents = userPokemon.useMove(choice, opponentPokemon, opponentChoice)
 			utils.printHealthBars(userPokemon, opponentPokemon)
-			print(opponentChoiceStr)
-			print(opponentEvents)
-			print(choiceStr)
-			print(userEvents)
+			print("\n".join((opponentChoiceStr, opponentEvents, choiceStr, userEvents)))
 			if not userPokemon.HP or not opponentPokemon.HP:
 				playerWon = not opponentPokemon.HP
 				break
@@ -128,17 +135,13 @@ def main() -> int:
 			userEvents = userPokemon.useMove(choice, opponentPokemon, opponentChoice)
 			if not userPokemon.HP or not opponentPokemon.HP:
 				utils.printHealthBars(userPokemon, opponentPokemon)
-				print(choiceStr)
-				print(userEvents)
+				print("%s\n%s" % (choiceStr, userEvents))
 				playerWon = not opponentPokemon.HP
 				break
 
 			opponentEvents = opponentPokemon.useMove(opponentChoice, userPokemon, choice)
 			utils.printHealthBars(userPokemon, opponentPokemon)
-			print(choiceStr)
-			print(userEvents)
-			print(opponentChoiceStr)
-			print(opponentEvents)
+			print("\n".join((choiceStr, userEvents, opponentChoiceStr, opponentEvents)))
 			if not userPokemon.HP or not opponentPokemon.HP:
 				playerWon = not opponentPokemon.HP
 				break
@@ -152,6 +155,11 @@ def run():
 	"""
 	A wrapper for main to catch the user quitting for less ugly ends to the program
 	"""
+	if len(sys.argv) > 1 and sys.argv[1] in {'-V', '--version'}:
+		print("pokesim - Pokémon Battle Simulator - Version %s" % __version__)
+		exit()
+
+	random.seed()
 	try:
 		main()
 	except (KeyboardInterrupt, EOFError):

@@ -1,5 +1,5 @@
 # README in markdown format
-include README.md
+include README.rst
 
 # Pokemon and Move Data
 recursive-include pokesim/data/ *

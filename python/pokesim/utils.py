@@ -7,6 +7,10 @@ import random
 import typing
 import os
 import shutil
+try:
+	import readline
+except ImportError:
+	import pyreadline as readline # Windows readline fallback
 from . import constants
 from . import pokemon
 from . import move
@@ -20,7 +24,7 @@ from . import move
 
 # Background Color ANSI sequences
 RED_BACKGROUND = "\033[48;2;255;0;0m"
-GREEN_BACKGROUND = "\033[48;2;0;255;0m"
+GREEN_BACKGROUND = "\033[48;2;0;160;0m"
 
 # Foreground Color ANSI sequenses
 WHITE_FOREGROUND = "\033[38;2;255;255;255m"
@@ -46,6 +50,35 @@ def getTTYsize() -> os.terminal_size:
 	Returns the terminal size
 	"""
 	return shutil.get_terminal_size()
+
+def HealthBar(width: int, hp: int, maxHP: int) -> str:
+	"""
+	Returns a string representing a single health bar
+	"""
+	ret = []
+
+	hpBlocks = int(hp/maxHP * width)
+	if hpBlocks < 1 and hp > 0:
+		hpBlocks = 1
+
+	ret.append(WHITE_FOREGROUND)
+	if hpBlocks > 0:
+		ret.append(GREEN_BACKGROUND)
+	for i, char in enumerate("{:4d}/{:<4d}".format(hp, maxHP)):
+		if i == hpBlocks:
+			ret.append(RED_BACKGROUND)
+		ret.append(char)
+
+	if hpBlocks < 9:
+		ret += [' ' for _ in range(width - 9)]
+	else:
+		ret += [' ' for _ in range(hpBlocks - 9)]
+		ret.append(RED_BACKGROUND)
+		ret += [' ' for _ in range(width - hpBlocks)]
+
+	ret.append(NATIVE)
+
+	return ''.join(ret)
 
 def printHealthBars(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokemon):
 	"""
@@ -78,43 +111,46 @@ def printHealthBars(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokem
 
 	# Calculates number of green spaces to print,
 	# with a minimum of 1 if the pokemon has at least 1 HP
-	userhpblocks = int(userPokemon.HP/userPokemon.maxHP * sepPos)
-	if userhpblocks < 1 and userPokemon.HP > 0:
-		userhpblocks = 1
-	opponenthpblocks = int(opponentPokemon.HP/opponentPokemon.maxHP * opponentSpace)
-	if opponenthpblocks < 1 and opponentPokemon.HP > 0:
-		opponenthpblocks = 1
+	# userhpblocks = int(userPokemon.HP/userPokemon.maxHP * sepPos)
+	# if userhpblocks < 1 and userPokemon.HP > 0:
+	# 	userhpblocks = 1
+	# opponenthpblocks = int(opponentPokemon.HP/opponentPokemon.maxHP * opponentSpace)
+	# if opponenthpblocks < 1 and opponentPokemon.HP > 0:
+	# 	opponenthpblocks = 1
 
-	print(WHITE_FOREGROUND, end='')
+	# print(WHITE_FOREGROUND, end='')
 
-	# User's pokemon
-	if userhpblocks > 0:
-		print(GREEN_BACKGROUND, end='')
-	for i, char in enumerate("{:4d}/{:<4d}".format(userPokemon.HP, userPokemon.maxHP)):
-		if i == userhpblocks:
-			print(RED_BACKGROUND, end='')
-		print(char, end='')
-	if userhpblocks < 9:
-		print(" "*(sepPos - 9), end='')
-	else:
-		print(" "*(userhpblocks-9), end='')
-		print("%s%s" % (RED_BACKGROUND, ' '*(sepPos - userhpblocks)), end='')
+	# # User's pokemon
+	# if userhpblocks > 0:
+	# 	print(GREEN_BACKGROUND, end='')
+	# for i, char in enumerate("{:4d}/{:<4d}".format(userPokemon.HP, userPokemon.maxHP)):
+	# 	if i == userhpblocks:
+	# 		print(RED_BACKGROUND, end='')
+	# 	print(char, end='')
+	# if userhpblocks < 9:
+	# 	print(" "*(sepPos - 9), end='')
+	# else:
+	# 	print(" "*(userhpblocks-9), end='')
+	# 	print("%s%s" % (RED_BACKGROUND, ' '*(sepPos - userhpblocks)), end='')
 
-	print(NATIVE, WHITE_FOREGROUND, end='')
+	# print(NATIVE, WHITE_FOREGROUND, end='')
 
-	# Opponent's Pokemon
-	if opponenthpblocks > 0:
-		print(GREEN_BACKGROUND, end='')
-	for i, char in enumerate("{:4d}/{:<4d}".format(opponentPokemon.HP, opponentPokemon.maxHP)):
-		if i == opponenthpblocks:
-			print(RED_BACKGROUND, end='')
-		print(char, end='')
-	if opponenthpblocks < 9:
-		print(" "*(opponentSpace - 10), end='')
-	else:
-		print(" "*(opponenthpblocks-10), end='')
-		print("%s%s" % (RED_BACKGROUND, ' '*(opponentSpace - opponenthpblocks - 1)), end='')
-	print(NATIVE)
+	# # Opponent's Pokemon
+	# if opponenthpblocks > 0:
+	# 	print(GREEN_BACKGROUND, end='')
+	# for i, char in enumerate("{:4d}/{:<4d}".format(opponentPokemon.HP, opponentPokemon.maxHP)):
+	# 	if i == opponenthpblocks:
+	# 		print(RED_BACKGROUND, end='')
+	# 	print(char, end='')
+	# if opponenthpblocks < 9:
+	# 	print(" "*(opponentSpace - 10), end='')
+	# else:
+	# 	print(" "*(opponenthpblocks-10), end='')
+	# 	print("%s%s" % (RED_BACKGROUND, ' '*(opponentSpace - opponenthpblocks - 1)), end='')
+	# print(NATIVE)
+
+	print(HealthBar(sepPos-1, userPokemon.HP, userPokemon.maxHP), end=' ')
+	print(HealthBar(opponentSpace, opponentPokemon.HP, opponentPokemon.maxHP))
 
 
 def colorSprintf(text: str, color: Color) -> str:
@@ -190,7 +226,22 @@ def dumpPokemon(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokemon):
 	"""
 	userLines = repr(userPokemon).split('\n')
 	opponentLines = repr(opponentPokemon).split('\n')
-	print("        ".join((userLines.pop(0), "versus", opponentLines.pop(0))))
-	print("\n".join(("                ".join((line, opponentLines[i]))
+	print("".join((userLines.pop(0), "versus        ", opponentLines.pop(0))))
+	print("\n".join(("              ".join((line, opponentLines[i]))
 	                                          for i, line in enumerate(userLines))))
 	print()
+
+
+def setCompleter(fullWords: typing.Set[str]):
+	"""
+	Sets up tab-completion for the 'fullWords' set
+	"""
+	def complete(text: str, state: int) -> str:
+		"""
+		A closure that is used as the readline completion function
+		"""
+		return [word for word in fullWords if word.startswith(text)][state]
+
+	readline.set_completer_delims(' \t\n:')
+	readline.parse_and_bind("tab: complete")
+	readline.set_completer(complete)

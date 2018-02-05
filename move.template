@@ -4,6 +4,6 @@ contact?
 accuracy
 PP
 status/special/physical
-power OR affected stat index
-crit OR stages
+power OR affected stat indicies
+crit OR stages corresponding to above indicies
 NOTHING OR target {0: opponent, 1: self}

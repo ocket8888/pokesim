@@ -22,6 +22,22 @@ class Pokemon():
 		Creates a pokemon, reading in basic data from a file in `../data/pokemon/<name>`
 		"""
 		self.name = name
+		self.accuracy = 100
+		self.evasiveness = 100
+		self.status = constants.NON
+		self.priority = 0
+		self.stages = {constants.ATTACK: 0,
+		          constants.DEFENSE: 0,
+		          constants.SPECIAL_ATTACK: 0,
+		          constants.SPECIAL_DEFENSE: 0,
+		          constants.SPEED: 0,
+		          constants.CRIT: 0,
+		          constants.ACCURACY: 0,
+		          constants.EVASIVENESS: 0}
+		self.EVs = [0,0,0,0,0,0]
+		self.level = 0
+		self.nature = None
+		self.shadow = False
 
 		with open(os.path.join(utils.dataDir, "pokemon", name)) as datafile:
 			lines = datafile.read().split("\n")
@@ -49,23 +65,7 @@ class Pokemon():
 				requiredLevel = int(line.pop())
 				self.availableMoves.add((" ".join(line), requiredLevel))
 
-		self.gender = 'm'
-		self.accuracy = 100
-		self.evasiveness = 100
-		self.status = 0
-		self.priority = 0
 		self.HP = self.maxHP
-		self.stages = {constants.ATTACK: 0,
-		               constants.DEFENSE: 0,
-		               constants.SPECIAL_ATTACK: 0,
-		               constants.SPECIAL_DEFENSE: 0,
-		               constants.SPEED: 0,
-		               constants.CRIT: 0,
-		               constants.ACCURACY: 0,
-		               constants.EVASIVENESS: 0}
-		self.EVs = [0,0,0,0,0,0]
-		self.level = 0
-		self.nature = None
 
 	def setStats(self):
 		"""
@@ -110,12 +110,17 @@ class Pokemon():
 		"""
 		available = { availableMove[0] for availableMove in self.availableMoves
 		                       if availableMove[1] <= self.level }
+
+		utils.setCompleter(available)
 		for index, knownMove in enumerate(self.moves):
 			if knownMove and index != moveNo:
 				available.remove(str(knownMove))
 		while True:
 			print("Select %s's %d%s move." % (self, moveNo+1, suffixes[moveNo]))
-			choice = input("(move, or type 'l' to list available moves):")
+			choice = input("(move, or type 'l' to list available moves) [Debug Moveset]:")
+			if not choice:
+				self.moves[moveNo] = move.Move(['Growl', 'Sweet Scent', 'Razor Leaf', 'Vine Whip'][moveNo])
+				break
 			if choice == 'l':
 				utils.cls()
 				for availableMove in available:
@@ -139,7 +144,7 @@ class Pokemon():
 		if amt > 0 and self.stages[stat] >= 6:
 			self.stages[stat] = 6
 			return "%s's %s won't go any higher!" % (self, stat)
-		elif amt < 0 and self.stages[stat] <= 6:
+		elif amt < 0 and self.stages[stat] <= -6:
 			self.stages[stat] = -6
 			return "%s's %s won't go any lower!" % (self, stat)
 
@@ -152,12 +157,12 @@ class Pokemon():
 		return "%s's %s %s" % (self, stat, constants.statChangeFlavorText(amt))
 
 
-
-	def useMove(self, mymove: move.Move, otherpoke: move.Move, othermove: 'Pokemon') -> str:
+	def useMove(self, mymove: move.Move, otherpoke: 'Pokemon', othermove: move.Move) -> str:
 		"""
 		Handles what happens when a pokemon uses a move on another pokemon.
 		Returns a string describing the interaction
 		"""
+		mymove.PP -=1
 		hitChance = random.randrange(101)
 		effacc = 100.0
 		if self.stages[constants.ACCURACY] > 0:
@@ -169,23 +174,26 @@ class Pokemon():
 		if otherpoke.stages[constants.EVASIVENESS] > 0:
 			effev *= ( 3 + otherpoke.stages[constants.EVASIVENESS] ) / 3.0
 		elif otherpoke.stages[constants.EVASIVENESS] < 0:
-			effev *= 3.0 / ( 3 + otherpoke.stages[constants.EVASIVENESS] )
+			effev *= 3.0 / ( 3 - otherpoke.stages[constants.EVASIVENESS] )
 
 		if hitChance > int(mymove.accuracy * effacc / effev ):
 			return "... but it %s!" % ('missed' if mymove.moveType != move.STATUS else 'failed')
 
 		# Some damaging move, either physical or special
 		if mymove.moveType != move.STATUS:
-			dmg = mymove.calcDmg(self, otherpoke, othermove)
+			dmg, eventStr = mymove.calcDmg(self, otherpoke, othermove)
 			otherpoke.HP -= dmg
 			if otherpoke.HP < 0:
 				otherpoke.HP = 0
-			return "It dealt %d damage!" % dmg
+			return "%sIt dealt %d damage!" % (eventStr, dmg)
 
 		# Some status move
 		else:
-			targetPoke = otherpoke if mymove.target else self
-			return targetPoke.changeStage(mymove.affectedStat, mymove.stageChange)
+			targetPoke = self if mymove.target else otherpoke
+			return "\n".join(
+			    targetPoke.changeStage(stat, mymove.stageChanges[i])\
+			    for i, stat in\
+			    enumerate(mymove.affectedStats))
 
 	def __repr__(self) -> str:
 		"""
@@ -194,8 +202,8 @@ class Pokemon():
 		printstr = ['Lv. {:<3d} {:<24s}'.format(self.level, str(self))]
 		printstr.append("Type: {:>8s}{: <17s}".format(str(self.type1),
 			                                '/'+str(self.type2) if self.type2 != poketypes.TYPELESS else ''))
-		printstr.append("Height: %2.1fm%s" % (self.height, ' '*19))
-		printstr.append("Weight: %3.1fkg%s" % (self.weight, ' '*18))
+		printstr.append("Height: %2.1fm%s" % (self.height, ' '*20))
+		printstr.append("Weight: %3.1fkg%s" % (self.weight, ' '*19))
 		printstr.append("Gender: {: <24}".format("Male" if self.gender == 'm' else
 			                                   ("Female" if self.gender == 'f' else
 			                                   ("Genderless" if self.gender == 'n' else
@@ -217,6 +225,9 @@ class Pokemon():
 		printstr.append("Speed: %3d (Stage: %+d)%s" % (self.speed,
 			                                        self.stages[constants.SPEED],
 		                                            ' '*10))
+		printstr.append("Crit Stage: %+d%s" % (self.stages[constants.CRIT], ' '*18))
+		printstr.append("Accuracy Stage: %+d%s" % (self.stages[constants.ACCURACY], ' '*14))
+		printstr.append("Evasiveness Stage: %+d%s" % (self.stages[constants.EVASIVENESS], ' '*11))
 		printstr.append("        Moves%s" % (' '*19))
 		printstr.append("=====================%s" % (' '*11))
 		for mymove in self.moves:
@@ -246,7 +257,11 @@ def setEVs(pokemon: Pokemon):
 		print("[3]: Special Attack  -\t%d" % pokemon.EVs[3])
 		print("[4]: Special Defense -\t%d" % pokemon.EVs[4])
 		print("[5]: Speed           -\t%d\n" % pokemon.EVs[5])
-		stat = input(":")
+		stat = input("[Default stats - 252 HP, 252 ATK, 6 DEF]:")
+		if not stat:
+			pokemon.EVs = [252, 252, 6, 0, 0, 0]
+			utils.cls()
+			break
 		try:
 			stat = int(stat)
 			if stat not in range(6):
@@ -269,34 +284,29 @@ def setEVs(pokemon: Pokemon):
 			print("Please enter a number")
 			print()
 			continue
-		if amt + pokemon.EVs[stat] > 252:
-			utils.cls()
-			print("Amount would overflow stat! (max 252)")
-			print()
-			continue
-		elif amt + pokemon.EVs[stat] < 0:
-			utils.cls()
-			print("Cannot have less than 0 EVs!")
-			print()
-		elif total - amt < 0:
-			utils.cls()
-			print("You don't have that many EVs to spend!")
-			print()
-			continue
-
-		pokemon.EVs[stat] += amt
-		total -= amt
 		utils.cls()
+		if amt + pokemon.EVs[stat] > 252:
+			print("Amount would overflow stat! (max 252)\n")
+		elif amt + pokemon.EVs[stat] < 0:
+			print("Cannot have less than 0 EVs!\n")
+		elif total - amt < 0:
+			print("You don't have that many EVs to spend!\n")
+		else:
+			pokemon.EVs[stat] += amt
+			total -= amt
 
 def setGender(pokemon: Pokemon):
 	"""
 	Interactively sets a Pokemon's gender
 	"""
 	while pokemon.gender != 'n':
-		print("Choose the Pokemon's gender")
-		choice = input('(m/f): ')
+		print("Choose the Pokémon's gender")
+		choice = input('(m/f) [m]: ')
 		if choice in {'m', 'f'}:
 			pokemon.gender = choice
+			break
+		elif not choice:
+			pokemon.gender = 'm'
 			break
 		utils.cls()
 		print("This ain't tumblr")
@@ -306,16 +316,16 @@ def setLevel(pokemon: Pokemon):
 	interactively sets a Pokemon's level
 	"""
 	while not pokemon.level:
-		print("Choose the Pokemon's level")
-		choice = input("[1-100]: ")
+		print("Choose the Pokémon's level")
+		choice = input("(1-100) [100]: ")
 		try:
-			if int(choice) in range(1,101):
+			if not choice:
+				pokemon.level = 100
+			elif int(choice) in range(1,101):
 				pokemon.level = int(choice)
-				break
 			else:
 				utils.cls()
 				print("%d is not a valid level!" % choice)
-				continue
 		except ValueError:
 			utils.cls()
 			print("Please enter a number.")
@@ -324,9 +334,10 @@ def setNature(pokemon: Pokemon):
 	"""
 	Interactively sets a Pokemon's Nature
 	"""
+	utils.setCompleter(nature.Natures)
 	while not pokemon.nature:
-		print(f"Choose {pokemon.name}'s nature")
-		choice = input("(Nature, or 'l' to list natures): ")
+		print("Choose %s's nature" % pokemon)
+		choice = input("(Nature, or 'l' to list natures) [Hardy]: ")
 		if choice == 'l':
 			utils.cls()
 			nature.printNatures()
@@ -335,13 +346,18 @@ def setNature(pokemon: Pokemon):
 		elif choice in nature.Natures:
 			pokemon.nature = choice
 			break
+		elif not choice:
+			pokemon.nature = 'Hardy'
+			break
 		utils.cls()
 		print("Not a nature: '%s'" % choice)
+	utils.setCompleter({})
 
 def setup(pokemon: Pokemon):
 	"""
 	Totally sets up a Pokemon, interactively.
 	"""
+	utils.setCompleter({})
 	setGender(pokemon)
 	utils.cls()
 	setLevel(pokemon)

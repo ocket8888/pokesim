@@ -50,6 +50,7 @@ class Move():
 	"""
 	A pokemon's move
 	"""
+
 	def __init__(self, name: str):
 		"""
 		Reads in a move's data. Expects it in `../data/moves/<name>`
@@ -60,11 +61,12 @@ class Move():
 		with open(os.path.join(utils.dataDir, "moves", name)) as datafile:
 			lines = datafile.read().split('\n')
 			_ = lines.pop() #eliminates POSIX-compliant empty line at file end
-			self.type1 = int(lines.pop(0))
-			self.type2 = int(lines.pop(0))
+			self.type1 = poketypes.Type(int(lines.pop(0)))
+			self.type2 = poketypes.Type(int(lines.pop(0)))
 			self.contact = bool(int(lines.pop(0)))
 			self.accuracy = int(lines.pop(0))
 			self.PP = int(lines.pop(0))
+			self.maxPP = self.PP
 			self.moveType = MoveType(int(lines.pop(0)))
 
 		print(lines)
@@ -88,10 +90,10 @@ class Move():
 		attributes have already been parsed out
 		"""
 		self.target = bool(int(lines.pop()))
-		self.stageChange = int(lines.pop())
-		self.affectedStat = int(lines.pop())
+		self.stageChanges = [int(stage) for stage in lines.pop().split(' ')]
+		self.affectedStats = [constants.Stats(int(stat)) for stat in lines.pop().split(' ')]
 
-	def calcDmg(self, pkmn: object, otherpkmn: object, othermove: 'Move') -> int:
+	def calcDmg(self, pkmn: object, otherpkmn: object, unused_othermove: 'Move') -> typing.Tuple[int, str]:
 		"""
 		Calculates damage done by pkmn to otherpkmn (who used 'othermove', if that matters)
 		"""
@@ -99,9 +101,11 @@ class Move():
 		dmg += 2
 		dmg *= self.power
 
+		eventStr = ''
+
 		crit = critical(self.crit, pkmn.stages[constants.CRIT])
 		if crit > 1:
-			print("Critical Hit!")
+			eventStr = "A critical hit!\n"
 
 		effat, effdef = 0.0, 0.0
 		atstage, defstage = None, None
@@ -147,9 +151,19 @@ class Move():
 		if pkmn.status == constants.BRN and self.moveType == PHYSICAL:
 			mod /= 2.0
 
+		typeMod = poketypes.calcTypeEffectiveness(pkmn, otherpkmn, self)
+		mod *= typeMod
+
+		if not typeMod:
+			eventStr += 'But it had no effect!\n'
+		elif typeMod < 1:
+			eventStr += "It's not very effective...\n"
+		elif typeMod > 1:
+			eventStr += "It's super effective!\n"
+
 		dmg *= mod * crit
 
-		return int(dmg * mod)
+		return int(dmg), eventStr
 
 	def __repr__(self) -> str:
 		"""
