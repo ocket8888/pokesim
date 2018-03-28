@@ -12,6 +12,11 @@ import codecs
 # Always prefer setuptools over distutils
 from setuptools import setup
 
+# Windows doesn't have readline smh
+readline = "readline"
+if os.name != 'posix'
+	readline = "pyreadline"
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # Get the long description from the README file
@@ -123,7 +128,7 @@ setup(
 	#
 	# For an analysis of "install_requires" vs pip's requirements files see:
 	# https://packaging.python.org/en/latest/requirements.html
-	install_requires=['typing', 'setuptools'],  # Optional
+	install_requires=['typing', 'setuptools', readline],  # Optional
 
 	# List additional groups of dependencies here (e.g. development
 	# dependencies). Users will be able to install these using the "extras"
