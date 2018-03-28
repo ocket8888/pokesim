@@ -6,4 +6,5 @@ PP
 status/special/physical
 power OR affected stat indicies
 crit OR stages corresponding to above indicies
+ON HIT EFFECTS
 NOTHING OR target {0: opponent, 1: self}
