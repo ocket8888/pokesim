@@ -1,7 +1,7 @@
 #!/usr/bin/env python3 -OO
 
 """
-This package contains the functionality for a fully-playable pokemon battle simulation.
+This package contains the functionality for a fully-playable Pokémon battle simulation.
 """
 
 __version__ = "0.1.3"
@@ -48,6 +48,8 @@ def chooseAMove(poke: pokemon.Pokemon, opponent: pokemon.Pokemon=None) -> move.M
 	"""
 	Gets a move choice from the user
 	"""
+	if not poke.moves[0].PP and not poke.moves[1].PP and not poke.moves[2].PP and not poke.moves[3].PP:
+		
 	while True:
 		utils.printHealthBars(poke, opponent)
 		print("Choose a move:")
