@@ -14,7 +14,7 @@ from setuptools import setup
 
 # Windows doesn't have readline smh
 readline = "readline"
-if os.name != 'posix'
+if os.name != 'posix':
 	readline = "pyreadline"
 
 HERE = os.path.dirname(os.path.abspath(__file__))
