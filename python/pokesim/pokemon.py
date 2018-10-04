@@ -17,11 +17,12 @@ class Pokemon():
 	A class representing a pokemon, and all the information that entails
 	"""
 
-	def __init__(self, name: str):
+	def __init__(self, species:str, name:str = None):
 		"""
 		Creates a pokemon, reading in basic data from a file in `../data/pokemon/<name>`
 		"""
-		self.name = name
+		self.species = species
+		self.name = name if name else species
 		self.accuracy = 100
 		self.evasiveness = 100
 		self.status = constants.NON
@@ -39,7 +40,7 @@ class Pokemon():
 		self.nature = None
 		self.shadow = False
 
-		with open(os.path.join(utils.dataDir, "pokemon", name)) as datafile:
+		with open(os.path.join(utils.dataDir, "pokemon", species)) as datafile:
 			lines = datafile.read().split("\n")
 			self.type1 = poketypes.Type(int(lines[0]))
 			self.type2 = poketypes.Type(int(lines[1]))
