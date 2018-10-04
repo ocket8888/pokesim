@@ -21,10 +21,10 @@ def chooseAPokemon(available: typing.Set[str], opponent: bool=False) -> pokemon.
 
 	utils.setCompleter(available)
 
-	choiceStr = "your opponent's" if opponent else 'a'
+	choiceStr = "Choose %s Pokémon" % ("your opponent's" if opponent else 'a')
 
 	while True:
-		print("Choose %s Pokémon" % choiceStr)
+		print(choiceStr)
 		choice = input("(Pokémon Name, or 'l' list available Pokémon) [Bulbasaur]: ")
 
 		if choice == 'l':
@@ -40,7 +40,28 @@ def chooseAPokemon(available: typing.Set[str], opponent: bool=False) -> pokemon.
 			print("'%s' is not a recognized Pokémon!" % choice)
 
 	utils.cls()
-	poke = pokemon.Pokemon(choice)
+	species = choice
+	nickname = choice
+
+	while True:
+		choice = input("Nickname this Pokémon? [y/N]: ").lower()
+		if choice in {'y', 'yes'}:
+			while True:
+				choice = input("Enter nickname (max 48 characters):")
+				if choice:
+					if len(choice) <= 48:
+						nickname = choice
+						break
+					else:
+						print("Nickname too long!")
+				else:
+					print("Nickname cannot be blank!")
+			break
+		elif not choice or choice in {'n', 'no'}:
+			break
+		print("Please enter 'y' or 'n' (or just hit 'Enter').")
+
+	poke = pokemon.Pokemon(species, "The opponent's " + nickname if opponent else nickname)
 	pokemon.setup(poke)
 	return poke
 
@@ -48,8 +69,8 @@ def chooseAMove(poke: pokemon.Pokemon, opponent: pokemon.Pokemon=None) -> move.M
 	"""
 	Gets a move choice from the user
 	"""
-	if not poke.moves[0].PP and not poke.moves[1].PP and not poke.moves[2].PP and not poke.moves[3].PP:
-		
+	# if not poke.moves[0].PP and not poke.moves[1].PP and not poke.moves[2].PP and not poke.moves[3].PP:
+
 	while True:
 		utils.printHealthBars(poke, opponent)
 		print("Choose a move:")
@@ -114,7 +135,7 @@ def main() -> int:
 		#opponent chooses a move
 		utils.cls()
 		opponentChoice = opponentPokemon.moves[random.randrange(4)]
-		opponentChoiceStr = "The opponent's %s used %s!" % (opponentPokemon, opponentChoice)
+		opponentChoiceStr = "%s used %s!" % (opponentPokemon, opponentChoice)
 
 		order = utils.decideOrder(userPokemon, choice, opponentPokemon, choice)
 
@@ -149,7 +170,7 @@ def main() -> int:
 				break
 
 	if playerWon:
-		print("The opponent's %s fainted.\nYou Win!" % opponentPokemon)
+		print("%s fainted.\nYou Win!" % opponentPokemon)
 	else:
 		print("%s fainted.\nYou lose..." % userPokemon)
 
