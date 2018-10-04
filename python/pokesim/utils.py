@@ -91,7 +91,7 @@ def printHealthBars(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokem
 
 	# Pokemon names
 	print(("{: <%d}" % sepPos).format(str(userPokemon)), end=' ')
-	print(("{: <%d}" % (opponentSpace - 1)).format("Opponent's " + str(opponentPokemon)))
+	print(("{: <%d}" % (opponentSpace - 1)).format(str(opponentPokemon)))
 
 
 	# Pokemon level and status
@@ -106,48 +106,6 @@ def printHealthBars(userPokemon: pokemon.Pokemon, opponentPokemon: pokemon.Pokem
 		print(opponentPokemon.status)
 	else:
 		print()
-
-	# Actual Health Bars
-
-	# Calculates number of green spaces to print,
-	# with a minimum of 1 if the pokemon has at least 1 HP
-	# userhpblocks = int(userPokemon.HP/userPokemon.maxHP * sepPos)
-	# if userhpblocks < 1 and userPokemon.HP > 0:
-	# 	userhpblocks = 1
-	# opponenthpblocks = int(opponentPokemon.HP/opponentPokemon.maxHP * opponentSpace)
-	# if opponenthpblocks < 1 and opponentPokemon.HP > 0:
-	# 	opponenthpblocks = 1
-
-	# print(WHITE_FOREGROUND, end='')
-
-	# # User's pokemon
-	# if userhpblocks > 0:
-	# 	print(GREEN_BACKGROUND, end='')
-	# for i, char in enumerate("{:4d}/{:<4d}".format(userPokemon.HP, userPokemon.maxHP)):
-	# 	if i == userhpblocks:
-	# 		print(RED_BACKGROUND, end='')
-	# 	print(char, end='')
-	# if userhpblocks < 9:
-	# 	print(" "*(sepPos - 9), end='')
-	# else:
-	# 	print(" "*(userhpblocks-9), end='')
-	# 	print("%s%s" % (RED_BACKGROUND, ' '*(sepPos - userhpblocks)), end='')
-
-	# print(NATIVE, WHITE_FOREGROUND, end='')
-
-	# # Opponent's Pokemon
-	# if opponenthpblocks > 0:
-	# 	print(GREEN_BACKGROUND, end='')
-	# for i, char in enumerate("{:4d}/{:<4d}".format(opponentPokemon.HP, opponentPokemon.maxHP)):
-	# 	if i == opponenthpblocks:
-	# 		print(RED_BACKGROUND, end='')
-	# 	print(char, end='')
-	# if opponenthpblocks < 9:
-	# 	print(" "*(opponentSpace - 10), end='')
-	# else:
-	# 	print(" "*(opponenthpblocks-10), end='')
-	# 	print("%s%s" % (RED_BACKGROUND, ' '*(opponentSpace - opponenthpblocks - 1)), end='')
-	# print(NATIVE)
 
 	print(HealthBar(sepPos-1, userPokemon.HP, userPokemon.maxHP), end=' ')
 	print(HealthBar(opponentSpace, opponentPokemon.HP, opponentPokemon.maxHP))
