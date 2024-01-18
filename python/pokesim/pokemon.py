@@ -56,12 +56,12 @@ class Pokemon():
 			self.specialAttack = int(lines[8])
 			self.specialDefense = int(lines[9])
 			self.speed = int(lines[10])
-			self.availableAbilities = (lines[11], lines[12])
+			self.availableAbilities = lines[11].split(" ")
 			self.ability = None
 			self.availableMoves = set()
 			self.moves = [None, None, None, None]
 
-			for line in lines[13:]:
+			for line in lines[12:]:
 				line = line.split(" ")
 				requiredLevel = int(line.pop())
 				self.availableMoves.add((" ".join(line), requiredLevel))
