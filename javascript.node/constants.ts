@@ -40,19 +40,17 @@ export const enum Stat {
 	Accuracy = 7,
 	/** Affects the probability that a Pokémon will dodge an attack. */
 	Evasiveness = 8,
-	/** Unknown. */
-	CRIT
 }
 
 /**
  * A stat that can be affected by stat-affecting Moves.
  */
-export type StageableStat = Exclude<Stat, Stat.CRIT | Stat.Hitpoints>;
+export type StageableStat = Exclude<Stat, Stat.Hitpoints>;
 
 /**
  * A stat that is affected by effort values.
  */
-export type EVStat = Exclude<Stat, Stat.Accuracy | Stat.CRIT | Stat.Critical_Ratio | Stat.Evasiveness>;
+export type EVStat = Exclude<Stat, Stat.Accuracy | Stat.Critical_Ratio | Stat.Evasiveness>;
 
 /**
  * Returns the name of a stat.

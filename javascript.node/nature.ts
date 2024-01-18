@@ -3,7 +3,7 @@ import { Stat, statName } from "./constants";
 /**
  * A Stat that can be affected by a Pokémon's Nature.
  */
-export type NatureAffectedStat = Exclude<Stat, Stat.Hitpoints | Stat.Accuracy | Stat.CRIT | Stat.Critical_Ratio | Stat.Evasiveness>;
+export type NatureAffectedStat = Exclude<Stat, Stat.Hitpoints | Stat.Accuracy | Stat.Critical_Ratio | Stat.Evasiveness>;
 
 /**
  * A mapping of Nature names to their respective stat changes. If a Nature does
