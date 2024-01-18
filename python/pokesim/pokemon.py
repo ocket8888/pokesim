@@ -17,7 +17,7 @@ class Pokemon():
 	A class representing a pokemon, and all the information that entails
 	"""
 
-	def __init__(self, species:str, name:str = None):
+	def __init__(self, species: str, name: str = None):
 		"""
 		Creates a pokemon, reading in basic data from a file in `../data/pokemon/<name>`
 		"""
@@ -62,6 +62,9 @@ class Pokemon():
 			self.moves = [None, None, None, None]
 
 			for line in lines[12:]:
+				if not line:
+					# handles blank lines at the end of POSIX-compliant text files
+					break
 				line = line.split(" ")
 				requiredLevel = int(line.pop())
 				self.availableMoves.add((" ".join(line), requiredLevel))
@@ -201,7 +204,7 @@ class Pokemon():
 		A string representation of a Pokemon
 		"""
 		printstr = ['Lv. {:<3d} {:<24s}'.format(self.level, str(self))]
-		printstr.append("Type: {:>8s}{: <17s}".format(str(self.type1),
+		printstr.append("Type: {:>8s}{: <42s}".format(str(self.type1),
 			                                '/'+str(self.type2) if self.type2 != poketypes.TYPELESS else ''))
 		printstr.append("Height: %2.1fm%s" % (self.height, ' '*20))
 		printstr.append("Weight: %3.1fkg%s" % (self.weight, ' '*19))
@@ -352,13 +355,14 @@ def setNature(pokemon: Pokemon):
 			break
 		utils.cls()
 		print("Not a nature: '%s'" % choice)
-	utils.setCompleter({})
+	utils.setCompleter(set())
 
 def setup(pokemon: Pokemon):
 	"""
 	Totally sets up a Pokemon, interactively.
 	"""
-	utils.setCompleter({})
+	utils.setCompleter(set())
+	utils.cls()
 	setGender(pokemon)
 	utils.cls()
 	setLevel(pokemon)
