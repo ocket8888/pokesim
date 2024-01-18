@@ -1,0 +1,20 @@
+{
+  "name": "pokesim",
+  "version": "0.0.1",
+  "description": "A Pokémon battle simulator",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "tsc"
+  },
+  "keywords": [
+    "Pokemon",
+    "Pokémon"
+  ],
+  "author": "ocket8888",
+  "license": "Unlicense",
+  "devDependencies": {
+    "@types/node": "^20.11.4",
+    "typescript": "^5.3.3"
+  }
+}
