@@ -7,6 +7,7 @@ This package contains the functionality for a fully-playable Pokémon battle sim
 __version__ = "0.1.4"
 
 import os
+import platform
 import random
 import typing
 import sys
@@ -179,7 +180,7 @@ def run():
 	A wrapper for main to catch the user quitting for less ugly ends to the program
 	"""
 	if len(sys.argv) > 1 and sys.argv[1] in {'-V', '--version'}:
-		print("pokesim - Pokémon Battle Simulator - Version %s" % __version__)
+		print("pokesim - Pokémon Battle Simulator - Version %s (Platform: Python%s %s)" % (__version__, platform.python_version(), platform.system()))
 		exit()
 
 	random.seed()

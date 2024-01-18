@@ -1,11 +1,13 @@
 import * as process from "process";
 import { promises as fs } from "fs";
+import { platform as osPlatform } from "os";
 import { join as pathJoin } from "path";
 
 import { Pokemon, decideOrder, dumpPokemon, setupPokemon } from "./pokemon";
 import { cls, printHealthBars, range, setCompleter } from "./utils";
 import { Move } from "./move";
 import { DATA_DIR } from "./constants";
+import * as packageInfo from "./package.json";
 
 /**
  * Gets a Pokémon from the user.
@@ -121,6 +123,11 @@ async function chooseAMove(poke: Pokemon, opponent: Pokemon): Promise<Move> {
  * @returns An exit code.
  */
 async function main(): Promise<number> {
+	if (process.argv.length > 2 && process.argv[2] === "-V" || process.argv[2] === "--version") {
+		console.log(packageInfo.name, "- Pokémon Battle Simulator - Version", packageInfo.version, `(Platform: NodeJS${process.version} ${osPlatform()})`);
+		return 0;
+	}
+
 	const availablePokemon = new Set(await fs.readdir(pathJoin(DATA_DIR, "pokemon")));
 	cls();
 
