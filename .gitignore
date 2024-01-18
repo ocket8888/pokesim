@@ -1,5 +1,11 @@
-# Sublime Project files
+# Editor/Workspace setting files
 *.sublime-*
+*.code-workspace
+.vscode/
+*.anjuta
+*.idea
+.project
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
